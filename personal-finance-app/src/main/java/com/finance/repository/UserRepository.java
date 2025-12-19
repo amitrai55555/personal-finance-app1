@@ -9,15 +9,17 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    
+
     Optional<User> findByUsername(String username);
-    
+
     Optional<User> findByEmail(String email);
-    
+
     Boolean existsByUsername(String username);
-    
+
     Boolean existsByEmail(String email);
-    
+
+    long countByEnabledTrue();
+
     @Query("SELECT u FROM User u WHERE u.username = ?1 OR u.email = ?1")
     Optional<User> findByUsernameOrEmail(String usernameOrEmail);
 }
