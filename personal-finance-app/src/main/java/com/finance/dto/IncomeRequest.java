@@ -29,8 +29,7 @@ public class IncomeRequest {
     private RecurrenceType recurrenceType;
     
     private String notes;
-    @NotNull
-    private Long bankAccountId;
+
 
 
     // Constructors
