@@ -1,5 +1,6 @@
 package com.finance.entity;
 
+import com.finance.service.BankAccountService;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -81,7 +82,7 @@ public class Income {
     }
 
     public void setBankAccount(BankAccount bankAccount) {
-        this.bankAccount = bankAccount;
+        this.bankAccount = (BankAccount) bankAccount;
     }
 
 
@@ -183,7 +184,7 @@ public class Income {
     }
     
     public enum IncomeCategory {
-        SALARY, FREELANCE, INVESTMENTS, BUSINESS, RENTAL, BONUS, OTHER
+        SALARY, FREELANCE, INVESTMENTS, BUSINESS, RENTAL, BONUS, OTHERS, OTHER
     }
     
     public enum RecurrenceType {

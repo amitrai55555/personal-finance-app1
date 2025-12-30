@@ -4,6 +4,7 @@ import com.finance.dto.ExpenseRequest;
 import com.finance.entity.Expense;
 import com.finance.entity.Expense.ExpenseCategory;
 import com.finance.security.UserPrincipal;
+import com.finance.service.BankAccountService;
 import com.finance.service.ExpenseService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -23,4 +23,6 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, Long> 
 
     // Optional: find by IFSC if needed
     List<BankAccount> findByIfscCode(String ifscCode);
+
+    Optional<BankAccount> findPrimaryVerifiedAccountByUserId(Long userId);
 }

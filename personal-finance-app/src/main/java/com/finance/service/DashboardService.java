@@ -1,5 +1,7 @@
 package com.finance.service;
 
+import com.finance.dto.ExpenseResponse;
+import com.finance.dto.IncomeResponse;
 import com.finance.entity.Expense;
 import com.finance.entity.Expense.ExpenseCategory;
 import com.finance.entity.Goal;
@@ -37,18 +39,48 @@ public class DashboardService {
         LocalDate monthEnd = now.withDayOfMonth(now.lengthOfMonth());
         
         // Financial summary
-        BigDecimal totalIncome = incomeService.getTotalIncome(userId);
-        BigDecimal totalExpenses = expenseService.getTotalExpenses(userId);
-        BigDecimal netIncome = totalIncome.subtract(totalExpenses);
-        
+//        BigDecimal totalIncome = incomeService.getTotalIncome(userId);
+//        BigDecimal totalExpenses = expenseService.getTotalExpenses(userId);
+//        BigDecimal netIncome = totalIncome.subtract(totalExpenses);
+
+        List<IncomeResponse> recentIncomes =
+                incomeService.getRecentIncomes(userId, 5)
+                        .stream()
+                        .map(i -> {
+                            IncomeResponse dto = new IncomeResponse();
+                            dto.setId(i.getId());
+                            dto.setDescription(i.getDescription());
+                            dto.setAmount(i.getAmount());
+                            dto.setDate(i.getDate());
+                            dto.setCategory(i.getCategory().name());
+                            return dto;
+                        })
+                        .toList();
+
+        List<ExpenseResponse> recentExpenses =
+                expenseService.getRecentExpenses(userId, 5)
+                        .stream()
+                        .map(e -> {
+                            ExpenseResponse dto = new ExpenseResponse();
+                            dto.setId(e.getId());
+                            dto.setDescription(e.getDescription());
+                            dto.setAmount(e.getAmount());
+                            dto.setDate(e.getDate());
+                            dto.setCategory(e.getCategory().name());
+                            return dto;
+                        })
+                        .toList();
+
+        overview.put("recentIncomes", recentIncomes);
+        overview.put("recentExpenses", recentExpenses);
+
         // Monthly totals
         BigDecimal monthlyIncome = incomeService.getTotalIncomeByDateRange(userId, monthStart, monthEnd);
         BigDecimal monthlyExpenses = expenseService.getTotalExpensesByDateRange(userId, monthStart, monthEnd);
         BigDecimal monthlyNet = monthlyIncome.subtract(monthlyExpenses);
         
-        overview.put("totalIncome", totalIncome);
-        overview.put("totalExpenses", totalExpenses);
-        overview.put("netIncome", netIncome);
+
+
         overview.put("monthlyIncome", monthlyIncome);
         overview.put("monthlyExpenses", monthlyExpenses);
         overview.put("monthlyNet", monthlyNet);
@@ -62,8 +94,7 @@ public class DashboardService {
         overview.put("completedGoalsCount", goalService.getGoalCountByStatus(userId, Goal.GoalStatus.COMPLETED));
         
         // Recent transactions
-        List<Income> recentIncomes = incomeService.getRecentIncomes(userId, 5);
-        List<Expense> recentExpenses = expenseService.getRecentExpenses(userId, 5);
+//
         
         overview.put("recentIncomes", recentIncomes);
         overview.put("recentExpenses", recentExpenses);

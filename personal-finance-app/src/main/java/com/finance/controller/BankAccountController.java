@@ -4,10 +4,13 @@ import com.finance.dto.AddBankAccountRequest;
 import com.finance.dto.VerifyBankAccountRequest;
 import com.finance.entity.BankAccount;
 import com.finance.security.UserPrincipal;
+import com.finance.service.AccountAggregatorService;
 import com.finance.service.BankAccountService;
+
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -18,12 +21,14 @@ import java.util.Map;
 @RequestMapping("/api/bank-account")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class BankAccountController {
+    private final AccountAggregatorService aaService;
 
-    private final BankAccountService bankAccountService;
-
-    public BankAccountController(BankAccountService bankAccountService) {
+    public BankAccountController(AccountAggregatorService aaService, BankAccountService bankAccountService) {
+        this.aaService = aaService;
         this.bankAccountService = bankAccountService;
     }
+    private final BankAccountService bankAccountService;
+
 
     // ===============================
     // ADD BANK ACCOUNT
@@ -101,4 +106,26 @@ public class BankAccountController {
 
         return ResponseEntity.ok(response);
     }
+    @PostMapping("/aa/connect/{bankAccountId}")
+    public ResponseEntity<?> connectAA(
+            @PathVariable Long bankAccountId,
+            @AuthenticationPrincipal UserPrincipal user) {
+
+
+        String consentHandle =
+                aaService.initiateConsent(user.getId(), bankAccountId);
+
+        return ResponseEntity.ok(
+                Map.of("consentHandle", consentHandle)
+        );
+    }
+    @PostMapping("/aa/sync/{bankAccountId}")
+    public ResponseEntity<?> sync(
+            @PathVariable Long bankAccountId,
+            @AuthenticationPrincipal UserPrincipal user) {
+
+        aaService.syncTransactions(user.getId(), bankAccountId);
+        return ResponseEntity.ok("Transactions synced");
+    }
+
 }

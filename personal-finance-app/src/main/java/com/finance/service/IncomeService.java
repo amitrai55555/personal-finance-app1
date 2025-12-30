@@ -1,9 +1,11 @@
 
 package com.finance.service;
 import com.finance.dto.IncomeRequest;
+import com.finance.entity.BankAccount;
 import com.finance.entity.Income;
 import com.finance.entity.Income.IncomeCategory;
 import com.finance.entity.User;
+import com.finance.repository.BankAccountRepository;
 import com.finance.repository.IncomeRepository;
 import com.finance.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +30,8 @@ public class IncomeService {
 
     @Autowired
     private UserRepository userRepository;
-
-    public Income createIncome(IncomeRequest request, Long userId) {
+     private BankAccountRepository bankAccountRepository;
+    public Income createIncome(IncomeRequest request, Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -42,6 +44,14 @@ public class IncomeService {
         income.setRecurrenceType(request.getRecurrenceType());
         income.setNotes(request.getNotes());
         income.setUser(user);
+
+        BankAccount bankAccount =
+                (BankAccount) bankAccountRepository
+                        .findPrimaryVerifiedAccountByUserId(userId)
+                        .orElseThrow(() ->
+                                new RuntimeException("No verified bank account found"));
+
+        income.setBankAccount(bankAccount);
 
         // Calculate next occurrence for recurring income
         if (Boolean.TRUE.equals(request.getIsRecurring()) && request.getRecurrenceType() != null) {
@@ -154,5 +164,8 @@ public class IncomeService {
             default:
                 return null;
         }
+    }
+
+    public void createIncomeFromBank(IncomeRequest req, Long id, BankAccount bankAccount) {
     }
 }

@@ -18,52 +18,57 @@ import java.time.LocalDate;
 
 @Component
 public class DataLoader implements CommandLineRunner {
-    
+
     @Autowired
     private UserRepository userRepository;
-    
+
     @Autowired
     private IncomeRepository incomeRepository;
-    
+
     @Autowired
     private ExpenseRepository expenseRepository;
-    
+
     @Autowired
     private GoalRepository goalRepository;
-    
+
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
+
     @Override
-    public void run(String... args) throws Exception {
-        // Ensure an admin user exists
+    public void run(String... args) {
+
+        // ✅ 1. Ensure ADMIN user exists (FIXED)
         if (!userRepository.existsByUsername("admin")) {
+
             User admin = new User();
             admin.setUsername("admin");
-            admin.setEmail("admin@gmail..com");
+            admin.setEmail("amit230604@gmail.com"); // ✅ VALID EMAIL
             admin.setPassword(passwordEncoder.encode("admin123"));
             admin.setFirstName("Admin");
             admin.setLastName("User");
             admin.setRole(User.Role.ADMIN);
+
             userRepository.save(admin);
-            System.out.println("Admin user created: username=admin, password=admin123");
+            System.out.println("✅ Admin user created (admin / admin123)");
         }
 
-        // If there is already sample/user data present, don't duplicate demo content
+        // ✅ 2. Prevent duplicate demo data
         if (userRepository.count() > 1) {
-            return; // Admin exists and other users already present
+            System.out.println("ℹ️ Sample data already exists. Skipping demo data.");
+            return;
         }
 
-        // Create sample user
+        // ✅ 3. Create DEMO user
         User user = new User();
         user.setUsername("demo");
-        user.setEmail("demo@gmial.com");
+        user.setEmail("amitrai8736869660@gmail.com"); // ✅ VALID
         user.setPassword(passwordEncoder.encode("password123"));
         user.setFirstName("Demo");
         user.setLastName("User");
+        user.setRole(User.Role.USER); // ✅ Explicit role
         user = userRepository.save(user);
 
-        // Create sample income
+        // ================= INCOME =================
         Income salary = new Income();
         salary.setDescription("Monthly Salary");
         salary.setAmount(BigDecimal.valueOf(5000));
@@ -73,7 +78,7 @@ public class DataLoader implements CommandLineRunner {
         salary.setRecurrenceType(Income.RecurrenceType.MONTHLY);
         salary.setUser(user);
         incomeRepository.save(salary);
-        
+
         Income freelance = new Income();
         freelance.setDescription("Freelance Project");
         freelance.setAmount(BigDecimal.valueOf(1500));
@@ -81,8 +86,8 @@ public class DataLoader implements CommandLineRunner {
         freelance.setDate(LocalDate.now().minusDays(10));
         freelance.setUser(user);
         incomeRepository.save(freelance);
-        
-        // Create sample expenses
+
+        // ================= EXPENSE =================
         Expense rent = new Expense();
         rent.setDescription("Monthly Rent");
         rent.setAmount(BigDecimal.valueOf(1200));
@@ -92,7 +97,7 @@ public class DataLoader implements CommandLineRunner {
         rent.setRecurrenceType(Expense.RecurrenceType.MONTHLY);
         rent.setUser(user);
         expenseRepository.save(rent);
-        
+
         Expense groceries = new Expense();
         groceries.setDescription("Weekly Groceries");
         groceries.setAmount(BigDecimal.valueOf(150));
@@ -100,7 +105,7 @@ public class DataLoader implements CommandLineRunner {
         groceries.setDate(LocalDate.now().minusDays(3));
         groceries.setUser(user);
         expenseRepository.save(groceries);
-        
+
         Expense gas = new Expense();
         gas.setDescription("Gas Fill-up");
         gas.setAmount(BigDecimal.valueOf(60));
@@ -108,8 +113,8 @@ public class DataLoader implements CommandLineRunner {
         gas.setDate(LocalDate.now().minusDays(5));
         gas.setUser(user);
         expenseRepository.save(gas);
-        
-        // Create sample goals
+
+        // ================= GOALS =================
         Goal emergencyFund = new Goal();
         emergencyFund.setTitle("Emergency Fund");
         emergencyFund.setDescription("Build emergency fund for 6 months of expenses");
@@ -119,7 +124,7 @@ public class DataLoader implements CommandLineRunner {
         emergencyFund.setPriority(Goal.Priority.HIGH);
         emergencyFund.setUser(user);
         goalRepository.save(emergencyFund);
-        
+
         Goal vacation = new Goal();
         vacation.setTitle("Vacation Fund");
         vacation.setDescription("Save for a trip to Europe");
@@ -129,7 +134,7 @@ public class DataLoader implements CommandLineRunner {
         vacation.setPriority(Goal.Priority.MEDIUM);
         vacation.setUser(user);
         goalRepository.save(vacation);
-        
+
         Goal newCar = new Goal();
         newCar.setTitle("New Car");
         newCar.setDescription("Save for a down payment on a new car");
@@ -139,10 +144,8 @@ public class DataLoader implements CommandLineRunner {
         newCar.setPriority(Goal.Priority.LOW);
         newCar.setUser(user);
         goalRepository.save(newCar);
-        
-        System.out.println("Sample data loaded successfully!");
-        System.out.println("Demo login credentials:");
-        System.out.println("Username: demo");
-        System.out.println("Password: password123");
+
+        System.out.println("✅ Sample data loaded successfully!");
+        System.out.println("➡ Demo login: demo / password123");
     }
 }

@@ -68,9 +68,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         return savedAccount;
     }
 
-    // ===============================
-    // GET USER BANK ACCOUNTS
-    // ===============================
+
     @Override
     public List<BankAccount> getUserBankAccounts(Long userId) {
 

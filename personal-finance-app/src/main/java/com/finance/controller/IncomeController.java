@@ -4,6 +4,7 @@ import com.finance.dto.IncomeRequest;
 import com.finance.entity.Income;
 import com.finance.entity.Income.IncomeCategory;
 import com.finance.security.UserPrincipal;
+import com.finance.service.BankAccountService;
 import com.finance.service.IncomeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class IncomeController {
     public ResponseEntity<?> createIncome(@Valid @RequestBody IncomeRequest request, Authentication authentication) {
         try {
             UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+            BankAccountService BankAccountService;
             Income income = incomeService.createIncome(request, userPrincipal.getId());
             return ResponseEntity.ok(income);
         } catch (Exception e) {

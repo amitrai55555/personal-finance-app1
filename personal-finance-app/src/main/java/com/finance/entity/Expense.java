@@ -184,7 +184,7 @@ public class Expense {
     
     public enum ExpenseCategory {
         HOUSING, FOOD, TRANSPORTATION, UTILITIES, HEALTHCARE, 
-        ENTERTAINMENT, SHOPPING, EDUCATION, INSURANCE, OTHER
+        ENTERTAINMENT, SHOPPING, EDUCATION, INSURANCE, RENT, OTHERS, OTHER
     }
     
     public enum RecurrenceType {
