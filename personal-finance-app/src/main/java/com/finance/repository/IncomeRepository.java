@@ -25,6 +25,8 @@ public interface IncomeRepository extends JpaRepository<Income, Long> {
     List<Income> findByUserIdAndCategoryOrderByDateDesc(Long userId, IncomeCategory category);
     List<Income> findByUserIdAndBankAccountIdOrderByDateDesc(Long userId, Long bankAccountId);
 
+    java.util.Optional<Income> findByIdAndUserId(Long id, Long userId);
+
     @Query("SELECT SUM(i.amount) FROM Income i WHERE i.user.id = :userId")
     BigDecimal getTotalIncomeByUserId(@Param("userId") Long userId);
     
@@ -42,6 +44,5 @@ public interface IncomeRepository extends JpaRepository<Income, Long> {
                                                          @Param("endDate") LocalDate endDate);
     
     List<Income> findByUserIdAndIsRecurringTrueAndNextOccurrenceLessThanEqual(Long userId, LocalDate date);
-
 
 }

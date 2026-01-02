@@ -152,6 +152,39 @@ public class DashboardService {
     }
 
     // =====================================================
+    // 💡 FINANCIAL INSIGHTS (for dashboard & investments)
+    // =====================================================
+    public Map<String, Object> getFinancialInsights(Long userId) {
+        Map<String, Object> insights = new HashMap<>();
+
+        LocalDate now = LocalDate.now();
+        LocalDate monthStart = now.withDayOfMonth(1);
+        LocalDate monthEnd = now.withDayOfMonth(now.lengthOfMonth());
+
+        BigDecimal monthlyIncome = incomeService.getTotalIncomeByDateRange(userId, monthStart, monthEnd);
+        BigDecimal monthlyExpenses = expenseService.getTotalExpensesByDateRange(userId, monthStart, monthEnd);
+        BigDecimal monthlySavings = monthlyIncome.subtract(monthlyExpenses);
+
+        double savingsRate = BigDecimal.ZERO.compareTo(monthlyIncome) == 0
+                ? 0.0
+                : monthlySavings
+                .divide(monthlyIncome, 4, java.math.RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(100))
+                .doubleValue();
+
+        // Basic rules used by InvestmentService
+        BigDecimal investmentCapacity = monthlySavings.multiply(BigDecimal.valueOf(0.20));
+
+        insights.put("monthlyIncome", monthlyIncome);
+        insights.put("monthlyExpenses", monthlyExpenses);
+        insights.put("monthlySavings", monthlySavings);
+        insights.put("savingsRate", savingsRate);
+        insights.put("investmentCapacity", investmentCapacity);
+
+        return insights;
+    }
+
+    // =====================================================
     // 🔁 MAPPERS (AVOID ByteBuddy ERROR)
     // =====================================================
     private IncomeResponse mapIncomeToDto(Income i) {

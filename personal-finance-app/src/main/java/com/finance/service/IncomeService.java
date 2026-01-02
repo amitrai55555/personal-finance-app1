@@ -1,6 +1,7 @@
 package com.finance.service;
 
 import com.finance.dto.IncomeRequest;
+import com.finance.entity.BankAccount;
 import com.finance.entity.Income;
 import com.finance.entity.User;
 import com.finance.exception.ResourceNotFoundException;
@@ -13,8 +14,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,7 +29,7 @@ public class IncomeService {
     @Autowired
     private UserRepository userRepository;
 
-    // ================= CREATE =================
+    // ================= CREATE (NORMAL) =================
     public Income createIncome(IncomeRequest request, Long userId) {
 
         User user = userRepository.findById(userId)
@@ -39,8 +42,38 @@ public class IncomeService {
         income.setDescription(request.getDescription());
         income.setCategory(request.getCategory());
         income.setDate(request.getDate());
-        income.setRecurring(request.isRecurring());
+        income.setIsRecurring(request.getIsRecurring());
+        income.setRecurrenceType(request.getRecurrenceType());
+        income.setNotes(request.getNotes());
         income.setUser(user);
+
+        if (Boolean.TRUE.equals(request.getIsRecurring()) &&
+                request.getRecurrenceType() != null) {
+            income.setNextOccurrence(
+                    calculateNextOccurrence(request.getDate(), request.getRecurrenceType())
+            );
+        }
+
+        return incomeRepository.save(income);
+    }
+
+    // ================= CREATE (FROM BANK / AA) =================
+    public Income createIncomeFromBank(
+            IncomeRequest request,
+            Long userId,
+            BankAccount bankAccount
+    ) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+
+        Income income = new Income();
+        income.setAmount(request.getAmount());
+        income.setDescription(request.getDescription());
+        income.setCategory(request.getCategory());
+        income.setDate(request.getDate());
+        income.setUser(user);
+        income.setBankAccount(bankAccount);
 
         return incomeRepository.save(income);
     }
@@ -54,7 +87,7 @@ public class IncomeService {
         return incomeRepository.findByUserId(userId, pageable);
     }
 
-    public java.util.Optional<Income> getIncomeById(Long incomeId, Long userId) {
+    public Optional<Income> getIncomeById(Long incomeId, Long userId) {
         return incomeRepository.findByIdAndUserId(incomeId, userId);
     }
 
@@ -70,7 +103,18 @@ public class IncomeService {
         income.setDescription(request.getDescription());
         income.setCategory(request.getCategory());
         income.setDate(request.getDate());
-        income.setRecurring(request.isRecurring());
+        income.setIsRecurring(request.getIsRecurring());
+        income.setRecurrenceType(request.getRecurrenceType());
+        income.setNotes(request.getNotes());
+
+        if (Boolean.TRUE.equals(request.getIsRecurring()) &&
+                request.getRecurrenceType() != null) {
+            income.setNextOccurrence(
+                    calculateNextOccurrence(request.getDate(), request.getRecurrenceType())
+            );
+        } else {
+            income.setNextOccurrence(null);
+        }
 
         return incomeRepository.save(income);
     }
@@ -88,47 +132,71 @@ public class IncomeService {
 
     // ================= TOTAL =================
     public BigDecimal getTotalIncome(Long userId) {
-        return incomeRepository.getTotalIncomeByUserId(userId)
-                .orElse(BigDecimal.ZERO);
+        BigDecimal total = incomeRepository.getTotalIncomeByUserId(userId);
+        return total != null ? total : BigDecimal.ZERO;
     }
 
     public BigDecimal getTotalIncomeByDateRange(
             Long userId, LocalDate startDate, LocalDate endDate) {
 
-        return incomeRepository.getTotalIncomeByUserIdAndDateRange(
-                        userId, startDate, endDate)
-                .orElse(BigDecimal.ZERO);
+        BigDecimal total = incomeRepository.getTotalIncomeByUserIdAndDateRange(
+                userId, startDate, endDate);
+        return total != null ? total : BigDecimal.ZERO;
     }
 
     // ================= CATEGORY =================
     public Map<Income.IncomeCategory, BigDecimal> getIncomeByCategory(Long userId) {
 
-        List<Object[]> results =
-                incomeRepository.getIncomeGroupedByCategory(userId);
+        Map<Income.IncomeCategory, BigDecimal> map = new HashMap<>();
 
-        return results.stream()
-                .collect(Collectors.toMap(
-                        r -> (Income.IncomeCategory) r[0],
-                        r -> (BigDecimal) r[1]
-                ));
+        incomeRepository
+                .getIncomeByCategoryForUser(userId)
+                .forEach(obj ->
+                        map.put(
+                                (Income.IncomeCategory) obj[0],
+                                (BigDecimal) obj[1]
+                        )
+                );
+
+        return map;
     }
 
     public Map<Income.IncomeCategory, BigDecimal> getIncomeByCategoryAndDateRange(
             Long userId, LocalDate startDate, LocalDate endDate) {
 
-        List<Object[]> results =
-                incomeRepository.getIncomeGroupedByCategoryAndDateRange(
-                        userId, startDate, endDate);
+        Map<Income.IncomeCategory, BigDecimal> map = new HashMap<>();
 
-        return results.stream()
-                .collect(Collectors.toMap(
-                        r -> (Income.IncomeCategory) r[0],
-                        r -> (BigDecimal) r[1]
-                ));
+        incomeRepository
+                .getIncomeByCategoryForUserAndDateRange(userId, startDate, endDate)
+                .forEach(obj ->
+                        map.put(
+                                (Income.IncomeCategory) obj[0],
+                                (BigDecimal) obj[1]
+                        )
+                );
+
+        return map;
     }
 
     // ================= RECENT =================
     public List<Income> getRecentIncomes(Long userId, int limit) {
-        return incomeRepository.findTopNByUserIdOrderByDateDesc(userId, limit);
+        return incomeRepository
+                .findByUserIdOrderByDateDesc(userId)
+                .stream()
+                .limit(limit)
+                .toList();
+    }
+
+    // ================= UTIL =================
+    private LocalDate calculateNextOccurrence(
+            LocalDate date,
+            Income.RecurrenceType type
+    ) {
+        return switch (type) {
+            case WEEKLY -> date.plusWeeks(1);
+            case MONTHLY -> date.plusMonths(1);
+            case QUARTERLY -> date.plusMonths(3);
+            case YEARLY -> date.plusYears(1);
+        };
     }
 }
