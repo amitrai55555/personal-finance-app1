@@ -15,13 +15,13 @@ import java.util.List;
 
 @Repository
 public interface IncomeRepository extends JpaRepository<Income, Long> {
-    
+
     List<Income> findByUserIdOrderByDateDesc(Long userId);
-    
+    Page<Income> findByUserId(Long userId, Pageable pageable);
     Page<Income> findByUserIdOrderByDateDesc(Long userId, Pageable pageable);
-    
+
     List<Income> findByUserIdAndDateBetweenOrderByDateDesc(Long userId, LocalDate startDate, LocalDate endDate);
-    
+
     List<Income> findByUserIdAndCategoryOrderByDateDesc(Long userId, IncomeCategory category);
     List<Income> findByUserIdAndBankAccountIdOrderByDateDesc(Long userId, Long bankAccountId);
 
@@ -42,4 +42,6 @@ public interface IncomeRepository extends JpaRepository<Income, Long> {
                                                          @Param("endDate") LocalDate endDate);
     
     List<Income> findByUserIdAndIsRecurringTrueAndNextOccurrenceLessThanEqual(Long userId, LocalDate date);
+
+
 }
