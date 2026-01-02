@@ -5,6 +5,7 @@ import com.finance.entity.BankAccount;
 import com.finance.entity.Income;
 import com.finance.entity.User;
 import com.finance.exception.ResourceNotFoundException;
+import com.finance.repository.BankAccountRepository;
 import com.finance.repository.IncomeRepository;
 import com.finance.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class IncomeService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private BankAccountRepository bankAccountRepository;
+
     // ================= CREATE (NORMAL) =================
     public Income createIncome(IncomeRequest request, Long userId) {
 
@@ -46,6 +50,12 @@ public class IncomeService {
         income.setRecurrenceType(request.getRecurrenceType());
         income.setNotes(request.getNotes());
         income.setUser(user);
+
+        // Attach primary verified bank account, similar to ExpenseService
+        BankAccount bankAccount = bankAccountRepository
+                .findPrimaryVerifiedAccountByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("No verified bank account found"));
+        income.setBankAccount(bankAccount);
 
         if (Boolean.TRUE.equals(request.getIsRecurring()) &&
                 request.getRecurrenceType() != null) {

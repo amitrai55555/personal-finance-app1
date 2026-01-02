@@ -1,9 +1,11 @@
 package com.finance.config;
 
+import com.finance.entity.BankAccount;
 import com.finance.entity.Expense;
 import com.finance.entity.Goal;
 import com.finance.entity.Income;
 import com.finance.entity.User;
+import com.finance.repository.BankAccountRepository;
 import com.finance.repository.ExpenseRepository;
 import com.finance.repository.GoalRepository;
 import com.finance.repository.IncomeRepository;
@@ -30,6 +32,9 @@ public class DataLoader implements CommandLineRunner {
 
     @Autowired
     private GoalRepository goalRepository;
+
+    @Autowired
+    private BankAccountRepository bankAccountRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -68,6 +73,17 @@ public class DataLoader implements CommandLineRunner {
         user.setRole(User.Role.USER); // ✅ Explicit role
         user = userRepository.save(user);
 
+        // ================= BANK ACCOUNT FOR DEMO USER =================
+        BankAccount demoAccount = new BankAccount();
+        demoAccount.setUser(user);
+        demoAccount.setBankName("Demo Bank");
+        demoAccount.setAccountHolderName("Demo User");
+        demoAccount.setAccountNumberEncrypted("DEMO-ACCOUNT-123456");
+        demoAccount.setIfscCode("DEMO0000001");
+        demoAccount.setAccountType("SAVINGS");
+        demoAccount.setVerified(true);
+        demoAccount = bankAccountRepository.save(demoAccount);
+
         // ================= INCOME =================
         Income salary = new Income();
         salary.setDescription("Monthly Salary");
@@ -77,6 +93,7 @@ public class DataLoader implements CommandLineRunner {
         salary.setIsRecurring(true);
         salary.setRecurrenceType(Income.RecurrenceType.MONTHLY);
         salary.setUser(user);
+        salary.setBankAccount(demoAccount);
         incomeRepository.save(salary);
 
         Income freelance = new Income();
@@ -85,6 +102,7 @@ public class DataLoader implements CommandLineRunner {
         freelance.setCategory(Income.IncomeCategory.FREELANCE);
         freelance.setDate(LocalDate.now().minusDays(10));
         freelance.setUser(user);
+        freelance.setBankAccount(demoAccount);
         incomeRepository.save(freelance);
 
         // ================= EXPENSE =================
@@ -96,6 +114,7 @@ public class DataLoader implements CommandLineRunner {
         rent.setIsRecurring(true);
         rent.setRecurrenceType(Expense.RecurrenceType.MONTHLY);
         rent.setUser(user);
+        rent.setBankAccount(demoAccount);
         expenseRepository.save(rent);
 
         Expense groceries = new Expense();
@@ -104,6 +123,7 @@ public class DataLoader implements CommandLineRunner {
         groceries.setCategory(Expense.ExpenseCategory.FOOD);
         groceries.setDate(LocalDate.now().minusDays(3));
         groceries.setUser(user);
+        groceries.setBankAccount(demoAccount);
         expenseRepository.save(groceries);
 
         Expense gas = new Expense();
@@ -112,6 +132,7 @@ public class DataLoader implements CommandLineRunner {
         gas.setCategory(Expense.ExpenseCategory.TRANSPORTATION);
         gas.setDate(LocalDate.now().minusDays(5));
         gas.setUser(user);
+        gas.setBankAccount(demoAccount);
         expenseRepository.save(gas);
 
         // ================= GOALS =================
