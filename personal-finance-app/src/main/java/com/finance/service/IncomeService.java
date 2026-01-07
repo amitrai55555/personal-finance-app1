@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class IncomeService {
@@ -33,12 +32,18 @@ public class IncomeService {
     @Autowired
     private BankAccountRepository bankAccountRepository;
 
-    // ================= CREATE (NORMAL) =================
+    // ================= CREATE =================
     public Income createIncome(IncomeRequest request, Long userId) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("User not found with id: " + userId)
+                );
+
+        BankAccount bankAccount = bankAccountRepository
+                .findPrimaryVerifiedAccountByUserId(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("No verified primary bank account found")
                 );
 
         Income income = new Income();
@@ -50,24 +55,14 @@ public class IncomeService {
         income.setRecurrenceType(request.getRecurrenceType());
         income.setNotes(request.getNotes());
         income.setUser(user);
-
-        // Attach primary verified bank account, similar to ExpenseService
-        BankAccount bankAccount = bankAccountRepository
-                .findPrimaryVerifiedAccountByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("No verified bank account found"));
         income.setBankAccount(bankAccount);
 
-        if (Boolean.TRUE.equals(request.getIsRecurring()) &&
-                request.getRecurrenceType() != null) {
-            income.setNextOccurrence(
-                    calculateNextOccurrence(request.getDate(), request.getRecurrenceType())
-            );
-        }
+        handleRecurring(income, request);
 
         return incomeRepository.save(income);
     }
 
-    // ================= CREATE (FROM BANK / AA) =================
+    // ================= CREATE FROM BANK =================
     public Income createIncomeFromBank(
             IncomeRequest request,
             Long userId,
@@ -75,7 +70,9 @@ public class IncomeService {
     ) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found with id: " + userId)
+                );
 
         Income income = new Income();
         income.setAmount(request.getAmount());
@@ -84,6 +81,8 @@ public class IncomeService {
         income.setDate(request.getDate());
         income.setUser(user);
         income.setBankAccount(bankAccount);
+
+        handleRecurring(income, request);
 
         return incomeRepository.save(income);
     }
@@ -106,7 +105,7 @@ public class IncomeService {
 
         Income income = incomeRepository.findByIdAndUserId(incomeId, userId)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Income not found")
+                        new ResourceNotFoundException("Income not found or not authorized")
                 );
 
         income.setAmount(request.getAmount());
@@ -117,14 +116,7 @@ public class IncomeService {
         income.setRecurrenceType(request.getRecurrenceType());
         income.setNotes(request.getNotes());
 
-        if (Boolean.TRUE.equals(request.getIsRecurring()) &&
-                request.getRecurrenceType() != null) {
-            income.setNextOccurrence(
-                    calculateNextOccurrence(request.getDate(), request.getRecurrenceType())
-            );
-        } else {
-            income.setNextOccurrence(null);
-        }
+        handleRecurring(income, request);
 
         return incomeRepository.save(income);
     }
@@ -134,7 +126,7 @@ public class IncomeService {
 
         Income income = incomeRepository.findByIdAndUserId(incomeId, userId)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Income not found")
+                        new ResourceNotFoundException("Income not found or not authorized")
                 );
 
         incomeRepository.delete(income);
@@ -142,16 +134,20 @@ public class IncomeService {
 
     // ================= TOTAL =================
     public BigDecimal getTotalIncome(Long userId) {
-        BigDecimal total = incomeRepository.getTotalIncomeByUserId(userId);
-        return total != null ? total : BigDecimal.ZERO;
+        return Optional.ofNullable(
+                incomeRepository.getTotalIncomeByUserId(userId)
+        ).orElse(BigDecimal.ZERO);
     }
 
     public BigDecimal getTotalIncomeByDateRange(
-            Long userId, LocalDate startDate, LocalDate endDate) {
-
-        BigDecimal total = incomeRepository.getTotalIncomeByUserIdAndDateRange(
-                userId, startDate, endDate);
-        return total != null ? total : BigDecimal.ZERO;
+            Long userId,
+            LocalDate startDate,
+            LocalDate endDate
+    ) {
+        return Optional.ofNullable(
+                incomeRepository.getTotalIncomeByUserIdAndDateRange(
+                        userId, startDate, endDate)
+        ).orElse(BigDecimal.ZERO);
     }
 
     // ================= CATEGORY =================
@@ -159,8 +155,7 @@ public class IncomeService {
 
         Map<Income.IncomeCategory, BigDecimal> map = new HashMap<>();
 
-        incomeRepository
-                .getIncomeByCategoryForUser(userId)
+        incomeRepository.getIncomeByCategoryForUser(userId)
                 .forEach(obj ->
                         map.put(
                                 (Income.IncomeCategory) obj[0],
@@ -172,12 +167,16 @@ public class IncomeService {
     }
 
     public Map<Income.IncomeCategory, BigDecimal> getIncomeByCategoryAndDateRange(
-            Long userId, LocalDate startDate, LocalDate endDate) {
+            Long userId,
+            LocalDate startDate,
+            LocalDate endDate
+    ) {
 
         Map<Income.IncomeCategory, BigDecimal> map = new HashMap<>();
 
         incomeRepository
-                .getIncomeByCategoryForUserAndDateRange(userId, startDate, endDate)
+                .getIncomeByCategoryForUserAndDateRange(
+                        userId, startDate, endDate)
                 .forEach(obj ->
                         map.put(
                                 (Income.IncomeCategory) obj[0],
@@ -190,14 +189,30 @@ public class IncomeService {
 
     // ================= RECENT =================
     public List<Income> getRecentIncomes(Long userId, int limit) {
-        return incomeRepository
-                .findByUserIdOrderByDateDesc(userId)
+        return incomeRepository.findByUserIdOrderByDateDesc(userId)
                 .stream()
                 .limit(limit)
                 .toList();
     }
 
     // ================= UTIL =================
+    private void handleRecurring(Income income, IncomeRequest request) {
+
+        if (Boolean.TRUE.equals(request.getIsRecurring())
+                && request.getRecurrenceType() != null
+                && request.getDate() != null) {
+
+            income.setNextOccurrence(
+                    calculateNextOccurrence(
+                            request.getDate(),
+                            request.getRecurrenceType()
+                    )
+            );
+        } else {
+            income.setNextOccurrence(null);
+        }
+    }
+
     private LocalDate calculateNextOccurrence(
             LocalDate date,
             Income.RecurrenceType type

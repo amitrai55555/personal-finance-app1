@@ -84,7 +84,7 @@ public class IncomeController {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         Income updatedIncome =
                 incomeService.updateIncome(id, request, userPrincipal.getId());
-
+        System.out.println("income updated successfully");
         return ResponseEntity.ok(updatedIncome);
     }
 

@@ -13,7 +13,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/public")
 @CrossOrigin(origins = "*", maxAge = 3600)
-public class PublicController {
+public class
+PublicController {
 
     @GetMapping("/health")
     public ResponseEntity<Map<String, Object>> health() {
