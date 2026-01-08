@@ -63,4 +63,41 @@ public class ExpenseController {
                 )
         );
     }
+
+    // =====================================================
+    // ✏ UPDATE EXPENSE
+    // =====================================================
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateExpense(
+            @PathVariable Long id,
+            @Valid @RequestBody ExpenseRequest request,
+            Authentication authentication
+    ) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
+        Expense updated = expenseService.updateExpense(
+                id,
+                request,
+                userPrincipal.getId()
+        );
+
+        return ResponseEntity.ok(updated);
+    }
+
+    // =====================================================
+    // ❌ DELETE EXPENSE
+    // =====================================================
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteExpense(
+            @PathVariable Long id,
+            Authentication authentication
+    ) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
+        expenseService.deleteExpense(id, userPrincipal.getId());
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Expense deleted successfully");
+        return ResponseEntity.ok(response);
+    }
 }

@@ -40,11 +40,23 @@ public class IncomeService {
                         new ResourceNotFoundException("User not found with id: " + userId)
                 );
 
-        BankAccount bankAccount = bankAccountRepository
-                .findPrimaryVerifiedAccountByUserId(userId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("No verified primary bank account found")
-                );
+        BankAccount bankAccount;
+        if (request.getBankAccountId() != null) {
+            bankAccount = bankAccountRepository
+                    .findByIdAndUser(request.getBankAccountId(), user)
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("Bank account not found for this user")
+                    );
+            if (!bankAccount.isVerified()) {
+                throw new ResourceNotFoundException("Selected bank account is not verified");
+            }
+        } else {
+            bankAccount = bankAccountRepository
+                    .findPrimaryVerifiedAccountByUserId(userId)
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("No verified primary bank account found")
+                    );
+        }
 
         Income income = new Income();
         income.setAmount(request.getAmount());

@@ -30,6 +30,9 @@ public class IncomeRequest {
     
     private String notes;
 
+    @NotNull(message = "Bank account is required")
+    private Long bankAccountId;
+
 
 
     // Constructors
@@ -99,5 +102,12 @@ public class IncomeRequest {
         this.notes = notes;
     }
 
+    public Long getBankAccountId() {
+        return bankAccountId;
+    }
+
+    public void setBankAccountId(Long bankAccountId) {
+        this.bankAccountId = bankAccountId;
+    }
 
 }

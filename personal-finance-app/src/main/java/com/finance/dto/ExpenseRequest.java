@@ -103,4 +103,8 @@ public class ExpenseRequest {
     public Long getBankAccountId() {
         return bankAccountId;
     }
+
+    public void setBankAccountId(Long bankAccountId) {
+        this.bankAccountId = bankAccountId;
+    }
 }

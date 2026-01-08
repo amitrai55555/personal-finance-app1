@@ -39,9 +39,19 @@ public class ExpenseService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        BankAccount bankAccount = bankAccountRepository
-                .findPrimaryVerifiedAccountByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("No verified bank account found"));
+        BankAccount bankAccount;
+        if (request.getBankAccountId() != null) {
+            bankAccount = bankAccountRepository
+                    .findByIdAndUser(request.getBankAccountId(), user)
+                    .orElseThrow(() -> new RuntimeException("Bank account not found for this user"));
+            if (!bankAccount.isVerified()) {
+                throw new RuntimeException("Selected bank account is not verified");
+            }
+        } else {
+            bankAccount = bankAccountRepository
+                    .findPrimaryVerifiedAccountByUserId(userId)
+                    .orElseThrow(() -> new RuntimeException("No verified bank account found"));
+        }
 
         Expense expense = new Expense();
         expense.setDescription(request.getDescription());
