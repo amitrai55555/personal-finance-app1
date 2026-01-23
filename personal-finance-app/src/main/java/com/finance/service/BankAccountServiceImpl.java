@@ -4,7 +4,8 @@ import com.finance.entity.BankAccount;
 import com.finance.entity.User;
 import com.finance.repository.BankAccountRepository;
 import com.finance.repository.UserRepository;
-import com.finance.util.EncryptionUtil;
+import com.finance.Util.EncryptionUtil;
+import com.finance.service.Mail.OtpService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

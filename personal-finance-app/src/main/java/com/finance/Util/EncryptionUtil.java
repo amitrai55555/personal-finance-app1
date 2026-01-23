@@ -1,4 +1,4 @@
-package com.finance.util;
+package com.finance.Util;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -34,9 +34,7 @@ public class EncryptionUtil {
         }
     }
 
-    // ===============================
-    // DECRYPT (optional – rarely used)
-    // ===============================
+  
     public String decrypt(String encryptedValue) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);

@@ -7,10 +7,12 @@ import com.finance.entity.User;
 import com.finance.repository.UserRepository;
 import com.finance.security.JwtUtils;
 import com.finance.security.UserPrincipal;
-import com.finance.service.PasswordResetService;
+import com.finance.service.Mail.EmailService;
+import com.finance.service.Mail.PasswordResetService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,7 +36,8 @@ class AuthControllerReset {
     private final JwtUtils jwtUtils;
     private final PasswordResetService passwordResetService;
     private final Logger logger = LoggerFactory.getLogger(AuthControllerReset.class);
-
+    @Autowired
+    private EmailService emailService;
     public AuthControllerReset(AuthenticationManager authenticationManager,
                                UserRepository userRepository,
                                PasswordEncoder encoder,
@@ -76,6 +79,7 @@ class AuthControllerReset {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+
         Map<String, String> response = new HashMap<>();
 
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -88,19 +92,25 @@ class AuthControllerReset {
             return ResponseEntity.badRequest().body(response);
         }
 
-        // Create new user's account
-        User user = new User(signUpRequest.getUsername(),
+        User user = new User(
+                signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()),
                 signUpRequest.getFirstName(),
-                signUpRequest.getLastName());
+                signUpRequest.getLastName()
+        );
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        // 🔥 THIS WAS MISSING
+        emailService.sendWelcomeEmail(savedUser);
 
         response.put("message", "User registered successfully!");
         return ResponseEntity.ok(response);
-
     }
+
+
+
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(Authentication authentication) {

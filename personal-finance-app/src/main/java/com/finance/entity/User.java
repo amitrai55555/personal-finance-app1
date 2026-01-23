@@ -85,6 +85,7 @@ public class User {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+
     }
     
     // Getters and Setters
@@ -104,7 +105,9 @@ public class User {
         this.username = username;
     }
     
-    public String getEmail() {
+    public @NotBlank(message = "Email is required")
+    @Email(message = "Email should be valid")
+    String getEmail() {
         return email;
     }
     

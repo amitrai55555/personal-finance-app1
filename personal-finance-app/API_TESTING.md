@@ -27,8 +27,10 @@ curl -X POST http://localhost:8080/api/auth/register \
 ```bash
 curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
+  
+  
   -d '{
-    "usernameOrEmail": "demo",
+    "usernameOrEmail": "amit230604@gmail.com",
     "password": "password123"
   }'
 ```
