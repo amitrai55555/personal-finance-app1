@@ -1,68 +1,110 @@
 package com.finance.service.Mail;
 
 import com.finance.entity.User;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmailService {
 
     private final JavaMailSender mailSender;
-    private final String frontendResetUrl; // e.g. https://app.example.com/reset-password
+    private final String frontendResetUrl;
     private final String testRecipient;
 
-    public EmailService(JavaMailSender mailSender,
-                        @Value("${app.frontend.reset-password-url:http://localhost:3000/reset-password}") String frontendResetUrl,
-                        @Value("${app.mail.test-recipient:}") String testRecipient) {
+    public EmailService(
+            JavaMailSender mailSender,
+            @Value("${app.frontend.reset-password-url:http://localhost:3000/reset-password}") String frontendResetUrl,
+            @Value("${app.mail.test-recipient:}") String testRecipient
+    ) {
         this.mailSender = mailSender;
         this.frontendResetUrl = frontendResetUrl;
         this.testRecipient = testRecipient != null ? testRecipient.trim() : "";
-        System.out.println("EmailService initialized with frontendResetUrl=" + this.frontendResetUrl + ", testRecipient=" + this.testRecipient);
+
+        System.out.println(
+                "EmailService initialized | resetUrl=" + this.frontendResetUrl +
+                        " | testRecipient=" + this.testRecipient
+        );
     }
 
+    // ===============================
+    // PASSWORD RESET EMAIL (HTML)
+    // ===============================
     public void sendPasswordResetEmail(User user, String token) {
-        String recipient = (testRecipient != null && !testRecipient.isEmpty()) ? testRecipient : user.getEmail();
+
+        String recipient =
+                (!testRecipient.isEmpty()) ? testRecipient : user.getEmail();
+
         String resetLink = frontendResetUrl + "?token=" + token;
         String subject = "Password reset request";
-        String text =   "Hi " + user.getFirstName() + ",Greetings from FinTrackr!\n" +
-                "\n" +
-                "We received a request to reset the password for your FinTrackr account.\n" +
-                "\n" +
-                "To proceed, please click the link below and follow the instructions to set a new password:\n" +
-                "\n" +
-                "Reset Password\n" +resetLink+
-                "\n" +
-                "For your security, this link is valid for a limited time. If you did not request a password reset, please ignore this email—your account will remain secure.\n" +
-                "\n" +
-                "If you need any assistance, our support team is always here to help.\n" +
-                "\n" +
-                "Stay secure and in control of your finances,\n" +
-                "Team FinTrackr";
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(recipient);
-        message.setSubject(subject);
-        message.setText(text);
-        mailSender.send(message);
+        String html =
+                "<p>Hi " + user.getFirstName() + ",</p>" +
+                        "<p>Greetings from <b>FinTrackr</b>!</p>" +
+                        "<p>We received a request to reset the password for your FinTrackr account.</p>" +
+                        "<p>Click the button below to set a new password:</p>" +
+
+                        "<a href='" + resetLink + "' " +
+                        "style='display:inline-block;padding:12px 18px;" +
+                        "background:#4361ee;color:#ffffff;" +
+                        "text-decoration:none;border-radius:6px;" +
+                        "font-weight:bold;'>Reset Password</a>" +
+
+                        "<p style='margin-top:16px;font-size:13px;color:#555;'>" +
+                        "For your security, this link is valid for a limited time. " +
+                        "If you did not request a password reset, please ignore this email—" +
+                        "your account will remain secure.</p>" +
+
+                        "<p>If you need any assistance, our support team is always here to help.</p>" +
+
+                        "<p>Stay secure and in control of your finances,<br>" +
+                        "<b>Team FinTrackr</b></p>";
+
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper =
+                    new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, "UTF-8");
+
+            helper.setFrom("FinTrackrTech@gmail.com","FinTrackr");
+            helper.setTo(recipient);
+            helper.setSubject(subject);
+
+            // 🔥 THIS LINE MAKES HTML WORK
+            helper.setText(html, true);
+            mailSender.send(message);
+
+            System.out.println("PASSWORD RESET EMAIL SENT TO: " + recipient);
+
+        }  catch (Exception e) {
+            throw new RuntimeException("Failed to send password reset email", e);
+        }
     }
+
+    // ===============================
+    // WELCOME EMAIL (PLAIN TEXT)
+    // ===============================
     public void sendWelcomeEmail(User user) {
 
         String recipient =
-                (testRecipient != null && !testRecipient.isEmpty())
-                        ? testRecipient
-                        : user.getEmail();
+                (!testRecipient.isEmpty()) ? testRecipient : user.getEmail();
 
-        String subject = "Welcome to Finance App 🎉";
+        String subject = "Welcome to FinTrackr 🎉";
+
         String text =
                 "Hi " + user.getFirstName() + ",\n\n" +
-                        "Thank you for choosing FinTrackr. We’re excited to welcome you as the newest member of our growing FinTrackr community.\n\n" +
-                        "You’ve just made a smart move by choosing FinTrackr—built to simplify the way you manage your money. From tracking your income and expenses to monitoring investments and downloading detailed financial reports, FinTrackr is designed to give you clarity, control, and confidence over your finances.\n\n\n" +
-                        "Regards,\n\nWhether you’re planning monthly budgets, analyzing spending habits, or keeping an eye on long-term investments, FinTrackr is here to support you at every step of your financial journey.\nStart exploring your dashboard and take the first step toward smarter financial decisions—because managing money should be simple, insightful, and stress-free.\n\nWelcome aboard,\n\n" +
+                        "Thank you for choosing FinTrackr. We’re excited to welcome you to our community.\n\n" +
+                        "FinTrackr helps you track income, expenses, investments, and download detailed reports—" +
+                        "all designed to give you clarity and control over your finances.\n\n" +
+                        "Start exploring your dashboard and take the first step toward smarter financial decisions.\n\n" +
+                        "Welcome aboard,\n\n" +
                         "Team FinTrackr";
 
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("FinTrackr <FinTrackrTech@gmail.com>");
         message.setTo(recipient);
         message.setSubject(subject);
         message.setText(text);
@@ -71,5 +113,4 @@ public class EmailService {
 
         System.out.println("WELCOME EMAIL SENT TO: " + recipient);
     }
-
 }
