@@ -30,8 +30,7 @@ public class InvestmentRecommendation {
         this.riskLevel = riskLevel;
         this.expectedReturn = expectedReturn;
     }
-    
-    // Getters and Setters
+
     public String getSymbol() {
         return symbol;
     }

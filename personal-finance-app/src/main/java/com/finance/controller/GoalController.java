@@ -48,11 +48,11 @@ public class GoalController {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         
         if (page == 0 && size == 10) {
-            // Return all goals if no pagination specified
+
             List<Goal> goals = goalService.getAllGoalsByUserId(userPrincipal.getId());
             return ResponseEntity.ok(goals);
         } else {
-            // Return paginated results
+     
             Pageable pageable = PageRequest.of(page, size);
             Page<Goal> goalPage = goalService.getGoalsByUserId(userPrincipal.getId(), pageable);
             return ResponseEntity.ok(goalPage.getContent());

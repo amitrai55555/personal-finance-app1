@@ -7,6 +7,7 @@ import com.finance.security.UserPrincipal;
 import com.finance.service.AccountAggregatorService;
 import com.finance.service.BankAccountService;
 
+import com.finance.service.BankAccountServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -77,6 +78,23 @@ public class BankAccountController {
                 "message", "Bank account verified successfully"
         ));
     }
+    @DeleteMapping("/{bankAccountId}")
+    public ResponseEntity<?> deleteBankAccount(
+            @PathVariable Long bankAccountId,
+            Authentication authentication) {
+
+        UserPrincipal userPrincipal =
+                (UserPrincipal) authentication.getPrincipal();
+
+        bankAccountService.deleteBankAccount(
+                userPrincipal.getId(),
+                bankAccountId
+        );
+
+        return ResponseEntity.ok(
+                Map.of("message", "Bank account deleted successfully")
+        );
+    }
 
     // ===============================
     // GET USER BANK ACCOUNTS
@@ -97,7 +115,7 @@ public class BankAccountController {
             map.put("accountHolderName", account.getAccountHolderName());
             map.put("accountNumber", "XXXXXX" +
                     account.getAccountNumberEncrypted()
-                            .substring(account.getAccountNumberEncrypted().length() - 4));
+                            .substring(account.getAccountNumberEncrypted().length() -4));
             map.put("ifscCode", account.getIfscCode());
             map.put("accountType", account.getAccountType());
             map.put("verified", account.isVerified());
@@ -106,6 +124,7 @@ public class BankAccountController {
 
         return ResponseEntity.ok(response);
     }
+
     @PostMapping("/aa/connect/{bankAccountId}")
     public ResponseEntity<?> connectAA(
             @PathVariable Long bankAccountId,
@@ -127,5 +146,45 @@ public class BankAccountController {
         aaService.syncTransactions(user.getId(), bankAccountId);
         return ResponseEntity.ok("Transactions synced");
     }
+    @PostMapping("/{bankAccountId}/delete/request-otp")
+    public ResponseEntity<?> requestDeleteOtp(
+            @PathVariable Long bankAccountId,
+            Authentication authentication) {
+
+        UserPrincipal user =
+                (UserPrincipal) authentication.getPrincipal();
+
+        bankAccountService.requestDeleteOtp(
+                user.getId(),
+                bankAccountId
+        );
+
+        return ResponseEntity.ok(
+                Map.of("message", "OTP sent to your registered email")
+        );
+    }
+
+    @DeleteMapping("/{bankAccountId}/delete/confirm")
+    public ResponseEntity<?> confirmDeleteBankAccount(
+            @PathVariable Long bankAccountId,
+            @RequestBody Map<String, String> body,
+            Authentication authentication) {
+
+        UserPrincipal userPrincipal =
+                (UserPrincipal) authentication.getPrincipal();
+
+        String otp = body.get("otp");
+
+        bankAccountService.deleteBankAccountWithOtp(
+                userPrincipal.getId(),
+                bankAccountId,
+                otp
+        );
+
+        return ResponseEntity.ok(
+                Map.of("message", "Bank account deleted successfully")
+        );
+    }
+
 
 }

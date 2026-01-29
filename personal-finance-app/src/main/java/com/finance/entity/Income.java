@@ -86,7 +86,7 @@ public class Income {
     }
 
 
-    // Getters and Setters
+
     public Long getId() {
         return id;
     }

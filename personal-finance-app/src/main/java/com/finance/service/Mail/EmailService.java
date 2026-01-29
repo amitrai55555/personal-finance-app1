@@ -31,9 +31,7 @@ public class EmailService {
         );
     }
 
-    // ===============================
-    // PASSWORD RESET EMAIL (HTML)
-    // ===============================
+
     public void sendPasswordResetEmail(User user, String token) {
 
         String recipient =
@@ -84,9 +82,7 @@ public class EmailService {
         }
     }
 
-    // ===============================
-    // WELCOME EMAIL (PLAIN TEXT)
-    // ===============================
+
     public void sendWelcomeEmail(User user) {
 
         String recipient =
@@ -113,4 +109,37 @@ public class EmailService {
 
         System.out.println("WELCOME EMAIL SENT TO: " + recipient);
     }
+
+
+    public void sendOtpVerificationEmail(User user, String otp) {
+        System.out.println("hit1");
+        String recipient =
+                (testRecipient != null && !testRecipient.isEmpty())
+                        ? testRecipient
+                        : user.getEmail();
+
+        String subject = "Bank Account Verification OTP";
+
+        String text =
+                "Hi " + user.getFirstName() + ",\n\n" +
+                        "Your One-Time Password (OTP) for verifying your FinTrackr account is:\n\n" +
+                        otp + "\n\n" +
+                        "This OTP is valid for the next 10 minutes. Please do not share it with anyone for security reasons..\n\n" +
+                        "If you did not request this, please ignore this email.\n\n"+
+                "Stay secure,\n" +
+                        "Team FinTrackr";
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(recipient);
+        message.setSubject(subject);
+        message.setText(text);
+
+        mailSender.send(message);
+
+        System.out.println("OTP EMAIL SENT TO: " + recipient);
+    }
+
+
+
+
 }

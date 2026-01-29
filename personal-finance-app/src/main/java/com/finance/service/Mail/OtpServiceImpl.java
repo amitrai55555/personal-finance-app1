@@ -23,16 +23,14 @@ public class OtpServiceImpl implements OtpService {
         this.emailService = emailService;
     }
 
-    // ===============================
-    // GENERATE & SEND OTP
-    // ===============================
+
     @Override
     public void generateAndSendOtp(User user, BankAccount bankAccount) {
 
-        // 1️⃣ Generate 6-digit OTP
+
         String otp = generateOtp();
 
-        // 2️⃣ Create OTP token
+
         OtpToken token = new OtpToken();
         token.setUser(user);
         token.setBankAccount(bankAccount);
@@ -43,16 +41,11 @@ public class OtpServiceImpl implements OtpService {
         otpTokenRepository.save(token);
 
         // 3️⃣ Send OTP via Email
-        emailService.sendPasswordResetEmail(
-                user,
-                "Your OTP for bank account verification is: " + otp +
-                        "\nThis OTP is valid for 5 minutes."
-        );
+        emailService.sendOtpVerificationEmail(user, otp);
+        System.out.println("hit2");
+
     }
 
-    // ===============================
-    // VERIFY OTP
-    // ===============================
     @Override
     public boolean verifyOtp(User user, BankAccount bankAccount, String otp) {
 

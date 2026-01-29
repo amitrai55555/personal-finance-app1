@@ -133,7 +133,7 @@ public class IncomeService {
         return incomeRepository.save(income);
     }
 
-    // ================= DELETE =================
+
     public void deleteIncome(Long incomeId, Long userId) {
 
         Income income = incomeRepository.findByIdAndUserId(incomeId, userId)
@@ -144,7 +144,7 @@ public class IncomeService {
         incomeRepository.delete(income);
     }
 
-    // ================= TOTAL =================
+
     public BigDecimal getTotalIncome(Long userId) {
         return Optional.ofNullable(
                 incomeRepository.getTotalIncomeByUserId(userId)
@@ -162,7 +162,7 @@ public class IncomeService {
         ).orElse(BigDecimal.ZERO);
     }
 
-    // ================= CATEGORY =================
+
     public Map<Income.IncomeCategory, BigDecimal> getIncomeByCategory(Long userId) {
 
         Map<Income.IncomeCategory, BigDecimal> map = new HashMap<>();
@@ -199,7 +199,7 @@ public class IncomeService {
         return map;
     }
 
-    // ================= RECENT =================
+
     public List<Income> getRecentIncomes(Long userId, int limit) {
         return incomeRepository.findByUserIdOrderByDateDesc(userId)
                 .stream()
@@ -207,7 +207,6 @@ public class IncomeService {
                 .toList();
     }
 
-    // ================= UTIL =================
     private void handleRecurring(Income income, IncomeRequest request) {
 
         if (Boolean.TRUE.equals(request.getIsRecurring())

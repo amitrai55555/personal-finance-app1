@@ -3,6 +3,7 @@ package com.finance.service;
 import com.finance.entity.BankAccount;
 import com.finance.entity.User;
 import com.finance.repository.BankAccountRepository;
+import com.finance.repository.OtpTokenRepository;
 import com.finance.repository.UserRepository;
 import com.finance.Util.EncryptionUtil;
 import com.finance.service.Mail.OtpService;
@@ -19,20 +20,23 @@ public class BankAccountServiceImpl implements BankAccountService {
     private final UserRepository userRepository;
     private final EncryptionUtil encryptionUtil;
     private final OtpService otpService;
+    private OtpTokenRepository otpTokenRepository;
 
     public BankAccountServiceImpl(BankAccountRepository bankAccountRepository,
                                   UserRepository userRepository,
                                   EncryptionUtil encryptionUtil,
-                                  OtpService otpService) {
+                                  OtpService otpService,OtpTokenRepository otpTokenRepository)
+
+    {
+        System.out.println("BankAccountServiceImpl");
         this.bankAccountRepository = bankAccountRepository;
         this.userRepository = userRepository;
         this.encryptionUtil = encryptionUtil;
         this.otpService = otpService;
+        this.otpTokenRepository = otpTokenRepository;
     }
 
-    // ===============================
-    // ADD BANK ACCOUNT
-    // ===============================
+
     @Override
     public BankAccount addBankAccount(Long userId,
                                       String bankName,
@@ -79,9 +83,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         return bankAccountRepository.findByUser(user);
     }
 
-    // ===============================
-    // VERIFY BANK ACCOUNT
-    // ===============================
+
     @Override
     public boolean verifyBankAccount(Long userId, Long accountId, String otp) {
 
@@ -104,4 +106,66 @@ public class BankAccountServiceImpl implements BankAccountService {
 
         return true;
     }
+    public void deleteBankAccount(Long userId, Long bankAccountId) {
+        System.out.println("otpTokenRepository = " + otpTokenRepository);
+
+        BankAccount account = bankAccountRepository
+                .findByIdAndUserId(bankAccountId, userId)
+                .orElseThrow(() ->
+                        new RuntimeException("Bank account not found"));
+
+        // 🔐 Optional: block delete if not verified / active
+         if (!account.isVerified()) { throw new RuntimeException("Account not verified"); }
+
+        // 🔥 delete related OTPs first
+   otpTokenRepository.deleteByBankAccount(account);
+
+        // 🔥 delete bank account
+        bankAccountRepository.delete(account);
+    }
+    public void requestDeleteOtp(Long userId, Long bankAccountId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        BankAccount account = bankAccountRepository
+                .findByIdAndUserId(bankAccountId, userId)
+                .orElseThrow(() -> new RuntimeException("Bank account not found"));
+
+        // Optional: only verified accounts
+        if (!account.isVerified()) {
+            throw new RuntimeException("Bank account not verified");
+        }
+
+        // 🔐 Generate & send OTP (reuse existing OTP system)
+        otpService.generateAndSendOtp(user, account);
+    }
+    public void deleteBankAccountWithOtp(
+            Long userId,
+            Long bankAccountId,
+            String otp
+    ) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        BankAccount account = bankAccountRepository
+                .findByIdAndUserId(bankAccountId, userId)
+                .orElseThrow(() -> new RuntimeException("Bank account not found"));
+
+        // 🔐 VERIFY OTP
+        boolean valid = otpService.verifyOtp(user, account, otp);
+
+        if (!valid) {
+            throw new RuntimeException("Invalid or expired OTP");
+        }
+
+        // 🔥 DELETE RELATED OTPs (FK SAFE)
+        otpTokenRepository.deleteByBankAccount(account);
+
+        // 🔥 DELETE BANK ACCOUNT
+        bankAccountRepository.delete(account);
+    }
+
 }
+

@@ -45,7 +45,7 @@ public class IncomeRequest {
         this.date = date;
     }
     
-    // Getters and Setters
+
     public String getDescription() {
         return description;
     }

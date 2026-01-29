@@ -23,9 +23,7 @@ public class ExpenseController {
         this.expenseService = expenseService;
     }
 
-    // =====================================================
-    // ➕ CREATE EXPENSE
-    // =====================================================
+
     @PostMapping
     public ResponseEntity<?> createExpense(
             @Valid @RequestBody ExpenseRequest request,
@@ -47,9 +45,7 @@ public class ExpenseController {
         return ResponseEntity.ok(response);
     }
 
-    // =====================================================
-    // 📄 GET ALL EXPENSES
-    // =====================================================
+
     @GetMapping
     public ResponseEntity<?> getAllExpenses(
             Authentication authentication
@@ -64,9 +60,6 @@ public class ExpenseController {
         );
     }
 
-    // =====================================================
-    // ✏ UPDATE EXPENSE
-    // =====================================================
     @PutMapping("/{id}")
     public ResponseEntity<?> updateExpense(
             @PathVariable Long id,
@@ -84,9 +77,7 @@ public class ExpenseController {
         return ResponseEntity.ok(updated);
     }
 
-    // =====================================================
-    // ❌ DELETE EXPENSE
-    // =====================================================
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteExpense(
             @PathVariable Long id,

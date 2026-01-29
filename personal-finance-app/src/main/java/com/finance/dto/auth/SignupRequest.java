@@ -28,7 +28,7 @@ public class SignupRequest {
     @Size(min = 2, max = 50, message = "Last name must be between 2 and 50 characters")
     private String lastName;
     
-    // Constructors
+
     public SignupRequest() {}
     
     public SignupRequest(String username, String email, String password, String firstName, String lastName) {
@@ -39,7 +39,7 @@ public class SignupRequest {
         this.lastName = lastName;
     }
     
-    // Getters and Setters
+
     public String getUsername() {
         return username;
     }

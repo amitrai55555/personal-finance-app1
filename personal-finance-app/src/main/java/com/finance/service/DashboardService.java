@@ -32,9 +32,7 @@ public class DashboardService {
         this.goalService = goalService;
     }
 
-    // =====================================================
-    // 🧭 DASHBOARD OVERVIEW
-    // =====================================================
+
     public Map<String, Object> getDashboardOverview(Long userId) {
 
         Map<String, Object> response = new HashMap<>();
@@ -90,9 +88,7 @@ public class DashboardService {
         return response;
     }
 
-    // =====================================================
-    // 📊 MONTHLY TRENDS
-    // =====================================================
+
     public Map<String, Object> getMonthlyTrends(Long userId, int monthsBack) {
 
         Map<String, Object> result = new HashMap<>();
@@ -121,9 +117,6 @@ public class DashboardService {
         return result;
     }
 
-    // =====================================================
-    // 📈 SPENDING ANALYSIS
-    // =====================================================
     public Map<String, Object> getSpendingAnalysis(
             Long userId,
             LocalDate startDate,
@@ -151,9 +144,7 @@ public class DashboardService {
         return data;
     }
 
-    // =====================================================
-    // 💡 FINANCIAL INSIGHTS (for dashboard & investments)
-    // =====================================================
+
     public Map<String, Object> getFinancialInsights(Long userId) {
         Map<String, Object> insights = new HashMap<>();
 
@@ -184,9 +175,7 @@ public class DashboardService {
         return insights;
     }
 
-    // =====================================================
-    // 🔁 MAPPERS (AVOID ByteBuddy ERROR)
-    // =====================================================
+
     private IncomeResponse mapIncomeToDto(Income i) {
         IncomeResponse dto = new IncomeResponse();
         dto.setId(i.getId());

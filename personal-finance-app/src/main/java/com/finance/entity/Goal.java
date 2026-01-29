@@ -77,7 +77,7 @@ public class Goal {
         this.user = user;
     }
     
-    // Helper methods
+
     public double getProgressPercentage() {
         if (targetAmount.compareTo(BigDecimal.ZERO) == 0) {
             return 0.0;

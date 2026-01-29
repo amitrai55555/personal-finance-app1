@@ -11,16 +11,11 @@ public class BankAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ===============================
-    // USER RELATION
-    // ===============================
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // ===============================
-    // BANK DETAILS
-    // ===============================
     @Column(nullable = false)
     private String bankName;
 
@@ -37,21 +32,15 @@ public class BankAccount {
     @Column(length = 20)
     private String accountType; // SAVINGS / CURRENT
 
-    // ===============================
-    // VERIFICATION
-    // ===============================
+
     @Column(nullable = false)
     private boolean isVerified = false;
 
-    // ===============================
-    // AUDIT
-    // ===============================
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // ===============================
-    // GETTERS & SETTERS
-    // ===============================
+
 
     public Long getId() {
         return id;

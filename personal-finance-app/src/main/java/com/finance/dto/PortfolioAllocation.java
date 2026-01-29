@@ -27,13 +27,13 @@ public class PortfolioAllocation {
     }
     
     private void calculateAllocations() {
-        // Default allocation: 60% stocks, 20% bonds, 15% real estate, 5% alternatives
+
         this.stocksPercentage = 60.0;
         this.bondsPercentage = 20.0;
         this.realEstatePercentage = 15.0;
         this.alternativesPercentage = 5.0;
         
-        // Adjust based on risk profile
+
         switch (riskProfile) {
             case "CONSERVATIVE":
                 this.stocksPercentage = 40.0;

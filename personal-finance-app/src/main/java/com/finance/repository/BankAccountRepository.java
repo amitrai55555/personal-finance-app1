@@ -25,4 +25,8 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, Long> 
     List<BankAccount> findByIfscCode(String ifscCode);
 
     Optional<BankAccount> findPrimaryVerifiedAccountByUserId(Long userId);
+    void deleteByUser(User user);
+    Optional<BankAccount> findByIdAndUserId(Long id, Long userId);
+
+
 }

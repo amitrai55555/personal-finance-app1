@@ -33,7 +33,7 @@ public class ExpenseService {
     @Autowired
     private BankAccountRepository bankAccountRepository;
 
-    // ================= CREATE (NORMAL) =================
+
     public Expense createExpense(ExpenseRequest request, Long userId) {
 
         User user = userRepository.findById(userId)
@@ -74,7 +74,7 @@ public class ExpenseService {
         return expenseRepository.save(expense);
     }
 
-    // ================= CREATE (FROM BANK / AA) =================
+
     public Expense createExpenseFromBank(
             ExpenseRequest request,
             Long userId,
@@ -95,7 +95,7 @@ public class ExpenseService {
         return expenseRepository.save(expense);
     }
 
-    // ================= FETCH =================
+
     public List<Expense> getAllExpensesByUserId(Long userId) {
         return expenseRepository.findByUserIdOrderByDateDesc(userId);
     }
@@ -109,7 +109,7 @@ public class ExpenseService {
                 .filter(e -> e.getUser().getId().equals(userId));
     }
 
-    // ================= UPDATE =================
+
     public Expense updateExpense(Long expenseId, ExpenseRequest request, Long userId) {
 
         Expense expense = getExpenseById(expenseId, userId)
@@ -135,14 +135,13 @@ public class ExpenseService {
         return expenseRepository.save(expense);
     }
 
-    // ================= DELETE =================
+
     public void deleteExpense(Long expenseId, Long userId) {
         Expense expense = getExpenseById(expenseId, userId)
                 .orElseThrow(() -> new RuntimeException("Expense not found"));
         expenseRepository.delete(expense);
     }
 
-    // ================= TOTALS =================
     public BigDecimal getTotalExpenses(Long userId) {
         BigDecimal total = expenseRepository.getTotalExpensesByUserId(userId);
         return total != null ? total : BigDecimal.ZERO;
@@ -156,7 +155,7 @@ public class ExpenseService {
         return total != null ? total : BigDecimal.ZERO;
     }
 
-    // ================= CATEGORY =================
+
     public Map<Expense.ExpenseCategory, BigDecimal>
     getExpensesByCategoryAndDateRange(
             Long userId, LocalDate start, LocalDate end) {
@@ -175,7 +174,7 @@ public class ExpenseService {
         return map;
     }
 
-    // ================= RECENT =================
+
     public List<Expense> getRecentExpenses(Long userId, int limit) {
         return expenseRepository
                 .findByUserIdOrderByDateDesc(userId)
@@ -184,7 +183,7 @@ public class ExpenseService {
                 .toList();
     }
 
-    // ================= UTIL =================
+
     private LocalDate calculateNextOccurrence(
             LocalDate date,
             Expense.RecurrenceType type

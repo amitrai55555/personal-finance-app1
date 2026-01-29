@@ -18,7 +18,7 @@ public class AddBankAccountRequest {
 
     private String accountType;
 
-    // getters & setters
+
     public String getBankName() { return bankName; }
     public void setBankName(String bankName) { this.bankName = bankName; }
 

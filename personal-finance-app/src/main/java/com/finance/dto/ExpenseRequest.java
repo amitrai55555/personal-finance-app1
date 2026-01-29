@@ -33,7 +33,7 @@ public class ExpenseRequest {
     private Long bankAccountId;
 
 
-    // Constructors
+
     public ExpenseRequest() {}
     
     public ExpenseRequest(String description, BigDecimal amount, ExpenseCategory category, LocalDate date) {
@@ -43,7 +43,7 @@ public class ExpenseRequest {
         this.date = date;
     }
     
-    // Getters and Setters
+
     public String getDescription() {
         return description;
     }

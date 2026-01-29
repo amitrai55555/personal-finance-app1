@@ -11,9 +11,7 @@ public class OtpToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ===============================
-    // RELATIONS
-    // ===============================
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -22,9 +20,7 @@ public class OtpToken {
     @JoinColumn(name = "bank_account_id", nullable = false)
     private BankAccount bankAccount;
 
-    // ===============================
-    // OTP DETAILS
-    // ===============================
+
     @Column(nullable = false, length = 10)
     private String otp;
 
@@ -34,22 +30,16 @@ public class OtpToken {
     @Column(nullable = false)
     private boolean used = false;
 
-    // ===============================
-    // AUDIT
-    // ===============================
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // ===============================
-    // HELPERS
-    // ===============================
+
     public boolean isExpired() {
         return LocalDateTime.now().isAfter(expiryTime);
     }
 
-    // ===============================
-    // GETTERS & SETTERS
-    // ===============================
+
     public Long getId() {
         return id;
     }

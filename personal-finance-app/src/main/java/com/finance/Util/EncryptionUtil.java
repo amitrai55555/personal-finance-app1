@@ -20,9 +20,7 @@ public class EncryptionUtil {
         this.secretKey = new SecretKeySpec(keyBytes, ALGORITHM);
     }
 
-    // ===============================
-    // ENCRYPT
-    // ===============================
+
     public String encrypt(String value) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);

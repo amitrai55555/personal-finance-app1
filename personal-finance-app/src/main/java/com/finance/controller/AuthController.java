@@ -10,6 +10,7 @@ import com.finance.security.UserPrincipal;
 import com.finance.service.Mail.EmailService;
 import com.finance.service.Mail.PasswordResetService;
 import jakarta.validation.Valid;
+import org.aspectj.weaver.patterns.IToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.cloudinary.AccessControlRule.AccessType.token;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -102,10 +105,10 @@ class AuthControllerReset {
 
         User savedUser = userRepository.save(user);
 
-        // 🔥 THIS WAS MISSING
         emailService.sendWelcomeEmail(savedUser);
 
         response.put("message", "User registered successfully!");
+
         return ResponseEntity.ok(response);
     }
 

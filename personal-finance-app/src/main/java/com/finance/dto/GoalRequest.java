@@ -28,7 +28,7 @@ public class GoalRequest {
     
     private Priority priority = Priority.MEDIUM;
     
-    // Constructors
+
     public GoalRequest() {}
     
     public GoalRequest(String title, String description, BigDecimal targetAmount, LocalDate targetDate, Priority priority) {
@@ -38,8 +38,7 @@ public class GoalRequest {
         this.targetDate = targetDate;
         this.priority = priority;
     }
-    
-    // Getters and Setters
+
     public String getTitle() {
         return title;
     }

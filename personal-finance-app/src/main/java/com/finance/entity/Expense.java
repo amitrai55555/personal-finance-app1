@@ -66,7 +66,7 @@ public class Expense {
     private BankAccount bankAccount;
 
 
-    // Constructors
+
     public Expense() {}
     
     public Expense(String description, BigDecimal amount, ExpenseCategory category, LocalDate date, User user) {

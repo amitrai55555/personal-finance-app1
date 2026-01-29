@@ -16,4 +16,11 @@ public interface BankAccountService {
     List<BankAccount> getUserBankAccounts(Long userId);
 
     boolean verifyBankAccount(Long userId, Long accountId, String otp);
+    void deleteBankAccount(Long userId, Long bankAccountId);
+    void requestDeleteOtp(Long userId, Long bankAccountId);
+
+    void deleteBankAccountWithOtp(Long userId,
+                                  Long bankAccountId,
+                                  String otp);
+
 }

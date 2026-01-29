@@ -19,7 +19,7 @@ public class BankTransaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 🔑 Link to User (MANDATORY)
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -46,7 +46,7 @@ public class BankTransaction {
     @Column(nullable = false)
     private LocalDate txnDate;
 
-    // Optional but REALISTIC
+
     private String currency = "INR";
 
     private BigDecimal balanceAfterTxn;
