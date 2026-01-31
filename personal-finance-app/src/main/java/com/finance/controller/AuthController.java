@@ -112,6 +112,23 @@ class AuthControllerReset {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/check-username/{username}")
+    public ResponseEntity<?> checkUsernameAvailability(@PathVariable String username) {
+        Map<String, Object> response = new HashMap<>();
+        
+        if (username == null || username.trim().isEmpty()) {
+            response.put("available", false);
+            response.put("message", "Username cannot be empty");
+            return ResponseEntity.badRequest().body(response);
+        }
+        
+        boolean exists = userRepository.existsByUsername(username.trim());
+        response.put("available", !exists);
+        response.put("message", exists ? "Username already taken" : "Username is available");
+        
+        return ResponseEntity.ok(response);
+    }
+
 
 
 

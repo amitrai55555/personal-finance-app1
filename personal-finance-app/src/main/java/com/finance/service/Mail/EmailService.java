@@ -130,6 +130,7 @@ public class EmailService {
                         "Team FinTrackr";
 
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("FinTrackr <FinTrackrTech@gmail.com>");
         message.setTo(recipient);
         message.setSubject(subject);
         message.setText(text);
