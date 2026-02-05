@@ -7,8 +7,8 @@ import com.finance.entity.User;
 import com.finance.repository.UserRepository;
 import com.finance.security.JwtUtils;
 import com.finance.security.UserPrincipal;
-import com.finance.service.Mail.EmailService;
 import com.finance.service.Mail.PasswordResetService;
+import com.finance.service.Mail.WelcomeEmailService;
 import jakarta.validation.Valid;
 import org.aspectj.weaver.patterns.IToken;
 import org.slf4j.Logger;
@@ -38,19 +38,20 @@ class AuthControllerReset {
     private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
     private final PasswordResetService passwordResetService;
+    private final WelcomeEmailService welcomeEmailService;
     private final Logger logger = LoggerFactory.getLogger(AuthControllerReset.class);
-    @Autowired
-    private EmailService emailService;
     public AuthControllerReset(AuthenticationManager authenticationManager,
                                UserRepository userRepository,
                                PasswordEncoder encoder,
                                JwtUtils jwtUtils,
-                               PasswordResetService passwordResetService) {
+                               PasswordResetService passwordResetService,
+                               WelcomeEmailService welcomeEmailService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
         this.passwordResetService = passwordResetService;
+        this.welcomeEmailService = welcomeEmailService;
     }
 
     @PostMapping("/login")
@@ -105,7 +106,7 @@ class AuthControllerReset {
 
         User savedUser = userRepository.save(user);
 
-        emailService.sendWelcomeEmail(savedUser);
+        welcomeEmailService.sendWelcomeEmail(savedUser);
 
         response.put("message", "User registered successfully!");
 
