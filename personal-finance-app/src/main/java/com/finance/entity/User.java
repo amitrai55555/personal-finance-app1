@@ -63,18 +63,34 @@ public class User {
     @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-    
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<BankAccount> bankAccounts = new ArrayList<>();
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Income> incomes = new ArrayList<>();
-    
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Expense> expenses = new ArrayList<>();
-    
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Goal> goals = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<BankTransaction> bankTransactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<OtpToken> otpTokens = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<PasswordResetToken> passwordResetTokens = new ArrayList<>();
     
     // Constructors
     public User() {}
@@ -182,11 +198,11 @@ public class User {
     public List<Income> getIncomes() {
         return incomes;
     }
-    
+
     public void setIncomes(List<Income> incomes) {
         this.incomes = incomes;
     }
-    
+
     public List<Expense> getExpenses() {
         return expenses;
     }
@@ -198,9 +214,41 @@ public class User {
     public List<Goal> getGoals() {
         return goals;
     }
-    
+
     public void setGoals(List<Goal> goals) {
         this.goals = goals;
+    }
+
+    public List<BankAccount> getBankAccounts() {
+        return bankAccounts;
+    }
+
+    public void setBankAccounts(List<BankAccount> bankAccounts) {
+        this.bankAccounts = bankAccounts;
+    }
+
+    public List<BankTransaction> getBankTransactions() {
+        return bankTransactions;
+    }
+
+    public void setBankTransactions(List<BankTransaction> bankTransactions) {
+        this.bankTransactions = bankTransactions;
+    }
+
+    public List<OtpToken> getOtpTokens() {
+        return otpTokens;
+    }
+
+    public void setOtpTokens(List<OtpToken> otpTokens) {
+        this.otpTokens = otpTokens;
+    }
+
+    public List<PasswordResetToken> getPasswordResetTokens() {
+        return passwordResetTokens;
+    }
+
+    public void setPasswordResetTokens(List<PasswordResetToken> passwordResetTokens) {
+        this.passwordResetTokens = passwordResetTokens;
     }
     
     public enum Role {

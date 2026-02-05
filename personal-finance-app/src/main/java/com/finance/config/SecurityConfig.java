@@ -75,7 +75,7 @@ public class SecurityConfig {
 
                         // 🌐 PUBLIC APIs
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/user/check-username").permitAll() // 🔴 CHANGE
+                        .requestMatchers("/api/user/check-username").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/error").permitAll()

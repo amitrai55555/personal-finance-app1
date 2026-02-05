@@ -1,7 +1,10 @@
 package com.finance.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "bank_accounts")
@@ -39,6 +42,22 @@ public class BankAccount {
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Income> incomes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Expense> expenses = new ArrayList<>();
+
+    @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<BankTransaction> transactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<OtpToken> otpTokens = new ArrayList<>();
 
 
 
@@ -104,5 +123,21 @@ public class BankAccount {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public List<Income> getIncomes() {
+        return incomes;
+    }
+
+    public List<Expense> getExpenses() {
+        return expenses;
+    }
+
+    public List<BankTransaction> getTransactions() {
+        return transactions;
+    }
+
+    public List<OtpToken> getOtpTokens() {
+        return otpTokens;
     }
 }

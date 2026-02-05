@@ -15,21 +15,17 @@ import java.util.Random;
 public class OtpServiceImpl implements OtpService {
 
     private final OtpTokenRepository otpTokenRepository;
-    private final EmailService emailService;
+    private final OtpEmailService otpEmailService;
 
     public OtpServiceImpl(OtpTokenRepository otpTokenRepository,
-                          EmailService emailService) {
+                          OtpEmailService otpEmailService) {
         this.otpTokenRepository = otpTokenRepository;
-        this.emailService = emailService;
+        this.otpEmailService = otpEmailService;
     }
-
 
     @Override
     public void generateAndSendOtp(User user, BankAccount bankAccount) {
-
-
         String otp = generateOtp();
-
 
         OtpToken token = new OtpToken();
         token.setUser(user);
@@ -40,30 +36,24 @@ public class OtpServiceImpl implements OtpService {
 
         otpTokenRepository.save(token);
 
-        // 3️⃣ Send OTP via Email
-        emailService.sendOtpVerificationEmail(user, otp);
-        System.out.println("hit2");
-
+        // Send OTP via email
+        otpEmailService.sendOtpVerificationEmail(user, otp);
     }
 
     @Override
     public boolean verifyOtp(User user, BankAccount bankAccount, String otp) {
-
         OtpToken token = otpTokenRepository
                 .findTopByUserAndBankAccountAndUsedFalseOrderByCreatedAtDesc(user, bankAccount)
                 .orElseThrow(() -> new RuntimeException("OTP not found"));
 
-        // Check expiry
         if (token.isExpired()) {
             throw new RuntimeException("OTP expired");
         }
 
-        // Check OTP match
         if (!token.getOtp().equals(otp)) {
             throw new RuntimeException("Invalid OTP");
         }
 
-        // Mark as used
         token.setUsed(true);
         otpTokenRepository.save(token);
 

@@ -18,18 +18,18 @@ public class PasswordResetService {
 
     private final UserRepository userRepository;
     private final PasswordResetTokenRepository tokenRepository;
-    private final EmailService emailService;
+    private final PasswordResetEmailService passwordResetEmailService;
     private final PasswordEncoder passwordEncoder;
 
     public PasswordResetService(UserRepository userRepository,
                                 PasswordResetTokenRepository tokenRepository,
-                                EmailService emailService,
+                                PasswordResetEmailService passwordResetEmailService,
                                 PasswordEncoder passwordEncoder)
     {
         System.out.println("Password Reset Service");
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
-        this.emailService = emailService;
+        this.passwordResetEmailService = passwordResetEmailService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -49,7 +49,7 @@ public class PasswordResetService {
         PasswordResetToken prt = new PasswordResetToken(token, user, expiry);
         tokenRepository.save(prt);
 
-        emailService.sendPasswordResetEmail(user, token);
+        passwordResetEmailService.sendPasswordResetEmail(user, token);
     }
 
     public boolean validatePasswordResetToken(String token) {
