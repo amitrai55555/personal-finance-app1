@@ -27,6 +27,12 @@ public class MarketDataClient {
 
     private static final Logger log = LoggerFactory.getLogger(MarketDataClient.class);
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final Map<String, SymbolMapping> FREE_TIER_SYMBOLS = Map.of(
+            "RELIANCE", new SymbolMapping("AAPL", "NASDAQ", true),
+            "TCS", new SymbolMapping("MSFT", "NASDAQ", true),
+            "SENSEX", new SymbolMapping("SPY", "NYSE", true),
+            "NIFTY", new SymbolMapping("QQQ", "NASDAQ", true)
+    );
 
     private final RestTemplate restTemplate;
     private final String apiKey;
@@ -63,7 +69,15 @@ public class MarketDataClient {
             return Optional.empty();
         }
 
-        String cacheKey = exchange + ":" + symbol;
+        SymbolMapping mapping = resolveSymbol(symbol, exchange);
+        String apiSymbol = mapping.apiSymbol();
+        String apiExchange = mapping.apiExchange() != null ? mapping.apiExchange() : exchange;
+
+        if (mapping.replaced()) {
+            log.info("Swapping {} on {} to free-tier symbol {} on {}", symbol, exchange, apiSymbol, apiExchange);
+        }
+
+        String cacheKey = apiExchange + ":" + apiSymbol;
         CachedQuote cached = cache.get(cacheKey);
         Instant now = Instant.now();
         if (isFresh(cached, now)) {
@@ -71,8 +85,8 @@ public class MarketDataClient {
         }
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl + "/quote")
-                .queryParam("symbol", symbol)
-                .queryParam("exchange", exchange)
+                .queryParam("symbol", apiSymbol)
+                .queryParam("exchange", apiExchange)
                 .queryParam("apikey", apiKey);
 
         try {
@@ -85,22 +99,32 @@ public class MarketDataClient {
 
             if (body.isError()) {
                 QuoteError error = body.getError();
+                String code = error != null ? error.getCode() : body.getCode();
+                String message = error != null ? error.getMessage() : body.getMessage();
                 log.warn("Twelve Data error for {} on {} (status={}, code={}): {}",
                         symbol,
                         exchange,
                         body.getStatus(),
-                        error != null ? error.getCode() : null,
-                        error != null ? error.getMessage() : "unknown error");
+                        code,
+                        message != null ? message : "unknown error");
                 return useCachedQuote(cached, cacheKey, "provider error response");
             }
 
-            MarketQuote quote = body.toMarketQuote(symbol, exchange);
+            MarketQuote quote = body.toMarketQuote(apiSymbol, apiExchange);
             cache.put(cacheKey, new CachedQuote(quote, now));
             return Optional.ofNullable(quote);
         } catch (RestClientException ex) {
-            log.warn("Failed to fetch Twelve Data quote for {} on {}: {}", symbol, exchange, ex.getMessage());
+            log.warn("Failed to fetch Twelve Data quote for {} on {}: {}", apiSymbol, apiExchange, ex.getMessage());
             return useCachedQuote(cached, cacheKey, "client exception");
         }
+    }
+
+    private SymbolMapping resolveSymbol(String symbol, String exchange) {
+        SymbolMapping mapped = FREE_TIER_SYMBOLS.get(symbol.toUpperCase());
+        if (mapped != null) {
+            return mapped;
+        }
+        return new SymbolMapping(symbol, exchange, false);
     }
 
     private static BigDecimal toBigDecimal(String value) {
@@ -134,6 +158,9 @@ public class MarketDataClient {
     private record CachedQuote(MarketQuote quote, Instant fetchedAt) {
     }
 
+    private record SymbolMapping(String apiSymbol, String apiExchange, boolean replaced) {
+    }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class QuoteResponse {
         private String symbol;
@@ -149,11 +176,14 @@ public class MarketDataClient {
         private String percent_change;
         private String volume;
         private Boolean is_market_open;
+        private String code;
+        private String message;
         private String status;
         private QuoteError error;
 
         boolean isError() {
-            return (status != null && "error".equalsIgnoreCase(status)) || error != null;
+            // Twelve Data sometimes returns top-level code/message without the nested error object
+            return (status != null && "error".equalsIgnoreCase(status)) || error != null || code != null;
         }
 
         MarketQuote toMarketQuote(String requestedSymbol, String requestedExchange) {
@@ -267,6 +297,22 @@ public class MarketDataClient {
 
         public void setVolume(String volume) {
             this.volume = volume;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
         }
 
         public Boolean getIs_market_open() {
