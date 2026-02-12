@@ -77,6 +77,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/user/check-username").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
+                        .requestMatchers("/api/market/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/error").permitAll()
 

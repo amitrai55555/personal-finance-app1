@@ -15,6 +15,7 @@ public class InvestmentRecommendation {
     private Double expectedReturn; // Annual percentage
     private List<String> pros;
     private List<String> cons;
+    private MarketQuote marketQuote;
     
     // Constructors
     public InvestmentRecommendation() {}
@@ -109,5 +110,13 @@ public class InvestmentRecommendation {
     
     public void setCons(List<String> cons) {
         this.cons = cons;
+    }
+
+    public MarketQuote getMarketQuote() {
+        return marketQuote;
+    }
+
+    public void setMarketQuote(MarketQuote marketQuote) {
+        this.marketQuote = marketQuote;
     }
 }

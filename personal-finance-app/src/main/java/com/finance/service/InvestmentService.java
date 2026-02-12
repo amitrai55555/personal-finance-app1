@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,8 +14,14 @@ import java.util.Map;
 @Service
 public class InvestmentService {
     
+    private final DashboardService dashboardService;
+    private final MarketDataClient marketDataClient;
+
     @Autowired
-    private DashboardService dashboardService;
+    public InvestmentService(DashboardService dashboardService, MarketDataClient marketDataClient) {
+        this.dashboardService = dashboardService;
+        this.marketDataClient = marketDataClient;
+    }
     
     public PortfolioAllocation generatePortfolioRecommendation(Long userId, String riskProfile) {
         // Get user's financial insights
@@ -193,6 +198,7 @@ public class InvestmentService {
         recommendation.setExpectedReturn(expectedReturn);
         recommendation.setPros(pros);
         recommendation.setCons(cons);
+        marketDataClient.getQuote(symbol).ifPresent(recommendation::setMarketQuote);
         return recommendation;
     }
     

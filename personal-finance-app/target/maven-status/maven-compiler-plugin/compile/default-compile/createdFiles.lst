@@ -1,0 +1,4 @@
+com\finance\service\MarketDataClient$CachedQuote.class
+com\finance\service\MarketDataClient.class
+com\finance\service\MarketDataClient$QuoteResponse.class
+com\finance\service\MarketDataClient$QuoteError.class
