@@ -16,41 +16,62 @@ import java.util.Map;
 @RequestMapping("/api/investments")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class InvestmentController {
-    
+
     @Autowired
     private InvestmentService investmentService;
-    
+
+    @GetMapping
+    public ResponseEntity<java.util.List<Map<String, Object>>> getInvestments(Authentication authentication) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        PortfolioAllocation allocation = investmentService.generatePortfolioRecommendation(
+                userPrincipal.getId(), "MODERATE");
+
+        java.util.List<Map<String, Object>> investments = new java.util.ArrayList<>();
+        if (allocation != null && allocation.getRecommendations() != null) {
+            for (var rec : allocation.getRecommendations()) {
+                Map<String, Object> inv = new HashMap<>();
+                inv.put("name", rec.getName());
+                inv.put("type", rec.getType());
+                inv.put("amount", rec.getRecommendedAmount());
+                inv.put("currentValue", rec.getRecommendedAmount());
+                inv.put("quantity", 1);
+                investments.add(inv);
+            }
+        }
+        return ResponseEntity.ok(investments);
+    }
+
     @GetMapping("/recommendations")
     public ResponseEntity<PortfolioAllocation> getInvestmentRecommendations(
             Authentication authentication,
             @RequestParam(defaultValue = "MODERATE") String riskProfile) {
-        
+
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         PortfolioAllocation recommendations = investmentService.generatePortfolioRecommendation(
-            userPrincipal.getId(), riskProfile.toUpperCase());
-        
+                userPrincipal.getId(), riskProfile.toUpperCase());
+
         return ResponseEntity.ok(recommendations);
     }
-    
+
     @GetMapping("/capacity")
     public ResponseEntity<Map<String, Object>> getInvestmentCapacity(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        
+
         BigDecimal capacity = investmentService.calculateInvestmentCapacity(userPrincipal.getId());
         String suggestedRiskProfile = investmentService.determineRiskProfile(userPrincipal.getId());
-        
+
         Map<String, Object> response = new HashMap<>();
         response.put("investmentCapacity", capacity);
         response.put("suggestedRiskProfile", suggestedRiskProfile);
         response.put("description", "Based on 20% of your monthly net income");
-        
+
         return ResponseEntity.ok(response);
     }
-    
+
     @GetMapping("/risk-profiles")
     public ResponseEntity<Map<String, Object>> getRiskProfiles() {
         Map<String, Object> profiles = new HashMap<>();
-        
+
         Map<String, Object> conservative = new HashMap<>();
         conservative.put("name", "Conservative");
         conservative.put("description", "Lower risk, steady returns");
@@ -60,7 +81,7 @@ public class InvestmentController {
         conservative.put("alternativesPercentage", 5);
         conservative.put("expectedReturn", "5-7%");
         conservative.put("riskLevel", "Low");
-        
+
         Map<String, Object> moderate = new HashMap<>();
         moderate.put("name", "Moderate");
         moderate.put("description", "Balanced risk and return");
@@ -70,7 +91,7 @@ public class InvestmentController {
         moderate.put("alternativesPercentage", 5);
         moderate.put("expectedReturn", "7-10%");
         moderate.put("riskLevel", "Medium");
-        
+
         Map<String, Object> aggressive = new HashMap<>();
         aggressive.put("name", "Aggressive");
         aggressive.put("description", "Higher risk, higher potential returns");
@@ -80,11 +101,11 @@ public class InvestmentController {
         aggressive.put("alternativesPercentage", 5);
         aggressive.put("expectedReturn", "10-15%");
         aggressive.put("riskLevel", "High");
-        
+
         profiles.put("CONSERVATIVE", conservative);
         profiles.put("MODERATE", moderate);
         profiles.put("AGGRESSIVE", aggressive);
-        
+
         return ResponseEntity.ok(profiles);
     }
 }

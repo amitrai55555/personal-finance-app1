@@ -1,5 +1,6 @@
 package com.finance.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.finance.service.BankAccountService;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -62,9 +63,12 @@ public class Income {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bank_account_id", nullable = false)
+    @JsonIgnore
     private BankAccount bankAccount;
 
     // Constructors

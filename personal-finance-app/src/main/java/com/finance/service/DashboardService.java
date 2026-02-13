@@ -189,4 +189,48 @@ public class DashboardService {
                 dto.setCategory(e.getCategory().name());
                 return dto;
         }
+
+        public List<Map<String, Object>> getRecentTransactions(Long userId, int page, int size) {
+                List<Income> incomes = incomeService.getAllIncomesByUserId(userId);
+                List<Expense> expenses = expenseService.getAllExpensesByUserId(userId);
+
+                List<Map<String, Object>> transactions = new java.util.ArrayList<>();
+
+                for (Income i : incomes) {
+                        Map<String, Object> t = new HashMap<>();
+                        t.put("id", i.getId());
+                        t.put("type", "INCOME");
+                        t.put("description", i.getDescription());
+                        t.put("amount", i.getAmount());
+                        t.put("category", i.getCategory().name());
+                        t.put("date", i.getDate());
+                        transactions.add(t);
+                }
+
+                for (Expense e : expenses) {
+                        Map<String, Object> t = new HashMap<>();
+                        t.put("id", e.getId());
+                        t.put("type", "EXPENSE");
+                        t.put("description", e.getDescription());
+                        t.put("amount", e.getAmount());
+                        t.put("category", e.getCategory().name());
+                        t.put("date", e.getDate());
+                        transactions.add(t);
+                }
+
+                // Sort by date descending
+                transactions.sort((a, b) -> {
+                        LocalDate dateA = (LocalDate) a.get("date");
+                        LocalDate dateB = (LocalDate) b.get("date");
+                        return dateB.compareTo(dateA);
+                });
+
+                // Paginate
+                int start = page * size;
+                if (start >= transactions.size()) {
+                        return List.of();
+                }
+                int end = Math.min(start + size, transactions.size());
+                return transactions.subList(start, end);
+        }
 }
