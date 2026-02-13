@@ -11,9 +11,9 @@ public class BankAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    @com.fasterxml.jackson.annotation.JsonIgnore
     private User user;
 
     @Column(nullable = false)
@@ -32,11 +32,15 @@ public class BankAccount {
     @Column(length = 20)
     private String accountType; // SAVINGS / CURRENT
 
+
     @Column(nullable = false)
     private boolean isVerified = false;
 
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+
 
     public Long getId() {
         return id;

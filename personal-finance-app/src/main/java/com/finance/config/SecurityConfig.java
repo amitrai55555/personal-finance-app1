@@ -55,7 +55,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
 
@@ -76,15 +76,14 @@ public class SecurityConfig {
                         // 🌐 PUBLIC APIs
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/user/check-username").permitAll()
+                        .requestMatchers("/api/currency/**").permitAll() // Currency rates
                         .requestMatchers("/api/public/**").permitAll()
-                        .requestMatchers("/api/market/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/error").permitAll()
 
                         // 🔐 PROTECTED APIs
                         .requestMatchers("/api/bank-account/**").authenticated()
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

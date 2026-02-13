@@ -4,23 +4,12 @@ import com.finance.dto.ExpenseResponse;
 import com.finance.dto.IncomeResponse;
 import com.finance.entity.Expense;
 import com.finance.entity.Income;
-import com.finance.dto.TransactionDTO;
-import com.finance.entity.Expense;
 import com.finance.entity.Goal;
-import com.finance.entity.Income;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,12 +47,24 @@ public class DashboardService {
 
                 BigDecimal monthlyExpenses = expenseService.getTotalExpensesByDateRange(userId, monthStart, monthEnd);
 
+                // Previous month totals for percentage change calculation
+                YearMonth prevMonth = YearMonth.from(now).minusMonths(1);
+                LocalDate prevMonthStart = prevMonth.atDay(1);
+                LocalDate prevMonthEnd = prevMonth.atEndOfMonth();
+
+                BigDecimal prevMonthlyIncome = incomeService.getTotalIncomeByDateRange(userId, prevMonthStart,
+                                prevMonthEnd);
+                BigDecimal prevMonthlyExpenses = expenseService.getTotalExpensesByDateRange(userId, prevMonthStart,
+                                prevMonthEnd);
+
                 response.put("totalIncome", totalIncome);
                 response.put("totalExpenses", totalExpenses);
                 response.put("netBalance", totalIncome.subtract(totalExpenses));
                 response.put("monthlyIncome", monthlyIncome);
                 response.put("monthlyExpenses", monthlyExpenses);
                 response.put("monthlyNet", monthlyIncome.subtract(monthlyExpenses));
+                response.put("prevMonthlyIncome", prevMonthlyIncome);
+                response.put("prevMonthlyExpenses", prevMonthlyExpenses);
 
                 // Recent Incomes
                 List<IncomeResponse> recentIncomes = incomeService.getRecentIncomes(userId, 5)
@@ -187,46 +188,5 @@ public class DashboardService {
                 dto.setDate(e.getDate());
                 dto.setCategory(e.getCategory().name());
                 return dto;
-        }
-
-        public List<TransactionDTO> getAllTransactions(Long userId, int page, int size) {
-                // Fetch more than needed to ensure we have enough after sorting/merging
-                // We fetch (page + 1) * size items from EACH (income/expense)
-                // to guarantee we can fill the page even if one source is empty or everything
-                // comes from one source.
-                int limit = (page + 1) * size;
-                Pageable pageable = PageRequest.of(0, limit);
-
-                List<Income> incomes = incomeService.getIncomesByUserId(userId, pageable).getContent();
-                List<Expense> expenses = expenseService.getExpensesByUserId(userId, pageable).getContent();
-
-                List<TransactionDTO> transactions = new ArrayList<>();
-
-                for (Income i : incomes) {
-                        transactions.add(new TransactionDTO(
-                                        i.getId(), i.getDescription(), i.getAmount(),
-                                        i.getCategory().name(), i.getDate(), "INCOME", i.getCreatedAt()));
-                }
-
-                for (Expense e : expenses) {
-                        transactions.add(new TransactionDTO(
-                                        e.getId(), e.getDescription(), e.getAmount(),
-                                        e.getCategory().name(), e.getDate(), "EXPENSE", e.getCreatedAt()));
-                }
-
-                // Sort by Date DESC, then CreatedAt DESC
-                transactions.sort(
-                                Comparator.comparing(TransactionDTO::getDate)
-                                                .thenComparing(TransactionDTO::getCreatedAt)
-                                                .reversed());
-
-                int start = page * size;
-                int end = Math.min(start + size, transactions.size());
-
-                if (start >= transactions.size()) {
-                        return Collections.emptyList();
-                }
-
-                return transactions.subList(start, end);
         }
 }

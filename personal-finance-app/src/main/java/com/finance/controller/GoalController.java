@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,10 +25,10 @@ import java.util.Map;
 @RequestMapping("/api/goals")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class GoalController {
-    
+
     @Autowired
     private GoalService goalService;
-    
+
     @PostMapping
     public ResponseEntity<?> createGoal(@Valid @RequestBody GoalRequest request, Authentication authentication) {
         try {
@@ -40,46 +41,47 @@ public class GoalController {
             return ResponseEntity.badRequest().body(error);
         }
     }
-    
+
     @GetMapping
     public ResponseEntity<List<Goal>> getAllGoals(Authentication authentication,
-                                                 @RequestParam(defaultValue = "0") int page,
-                                                 @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        
+
         if (page == 0 && size == 10) {
 
             List<Goal> goals = goalService.getAllGoalsByUserId(userPrincipal.getId());
             return ResponseEntity.ok(goals);
         } else {
-     
+
             Pageable pageable = PageRequest.of(page, size);
             Page<Goal> goalPage = goalService.getGoalsByUserId(userPrincipal.getId(), pageable);
             return ResponseEntity.ok(goalPage.getContent());
         }
     }
-    
+
     @GetMapping("/active")
     public ResponseEntity<List<Goal>> getActiveGoals(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         List<Goal> activeGoals = goalService.getActiveGoalsByUserId(userPrincipal.getId());
         return ResponseEntity.ok(activeGoals);
     }
-    
+
     @GetMapping("/overdue")
     public ResponseEntity<List<Goal>> getOverdueGoals(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         List<Goal> overdueGoals = goalService.getOverdueGoals(userPrincipal.getId());
         return ResponseEntity.ok(overdueGoals);
     }
-    
+
     @GetMapping("/priority/{priority}")
-    public ResponseEntity<List<Goal>> getGoalsByPriority(@PathVariable Priority priority, Authentication authentication) {
+    public ResponseEntity<List<Goal>> getGoalsByPriority(@PathVariable Priority priority,
+            Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         List<Goal> goals = goalService.getGoalsByPriority(userPrincipal.getId(), priority);
         return ResponseEntity.ok(goals);
     }
-    
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getGoalById(@PathVariable Long id, Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
@@ -87,11 +89,11 @@ public class GoalController {
                 .map(goal -> ResponseEntity.ok(goal))
                 .orElse(ResponseEntity.notFound().build());
     }
-    
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateGoal(@PathVariable Long id, 
-                                       @Valid @RequestBody GoalRequest request, 
-                                       Authentication authentication) {
+    public ResponseEntity<?> updateGoal(@PathVariable Long id,
+            @Valid @RequestBody GoalRequest request,
+            Authentication authentication) {
         try {
             UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
             Goal updatedGoal = goalService.updateGoal(id, request, userPrincipal.getId());
@@ -102,11 +104,11 @@ public class GoalController {
             return ResponseEntity.badRequest().body(error);
         }
     }
-    
+
     @PatchMapping("/{id}/progress")
-    public ResponseEntity<?> updateGoalProgress(@PathVariable Long id, 
-                                               @RequestBody Map<String, BigDecimal> request, 
-                                               Authentication authentication) {
+    public ResponseEntity<?> updateGoalProgress(@PathVariable Long id,
+            @RequestBody Map<String, BigDecimal> request,
+            Authentication authentication) {
         try {
             UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
             BigDecimal amount = request.get("amount");
@@ -118,11 +120,11 @@ public class GoalController {
             return ResponseEntity.badRequest().body(error);
         }
     }
-    
+
     @PatchMapping("/{id}/add-progress")
-    public ResponseEntity<?> addToGoalProgress(@PathVariable Long id, 
-                                              @RequestBody Map<String, BigDecimal> request, 
-                                              Authentication authentication) {
+    public ResponseEntity<?> addToGoalProgress(@PathVariable Long id,
+            @RequestBody Map<String, BigDecimal> request,
+            Authentication authentication) {
         try {
             UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
             BigDecimal amount = request.get("amount");
@@ -134,11 +136,11 @@ public class GoalController {
             return ResponseEntity.badRequest().body(error);
         }
     }
-    
+
     @PatchMapping("/{id}/status")
-    public ResponseEntity<?> updateGoalStatus(@PathVariable Long id, 
-                                             @RequestBody Map<String, GoalStatus> request, 
-                                             Authentication authentication) {
+    public ResponseEntity<?> updateGoalStatus(@PathVariable Long id,
+            @RequestBody Map<String, GoalStatus> request,
+            Authentication authentication) {
         try {
             UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
             GoalStatus status = request.get("status");
@@ -150,7 +152,34 @@ public class GoalController {
             return ResponseEntity.badRequest().body(error);
         }
     }
-    
+
+    @PatchMapping("/{id}/quick-update")
+    public ResponseEntity<?> quickUpdateGoal(@PathVariable Long id,
+            @RequestBody Map<String, Object> request,
+            Authentication authentication) {
+        try {
+            UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
+            BigDecimal addAmount = request.containsKey("addAmount")
+                    ? new BigDecimal(request.get("addAmount").toString())
+                    : null;
+            BigDecimal targetAmount = request.containsKey("targetAmount")
+                    ? new BigDecimal(request.get("targetAmount").toString())
+                    : null;
+            LocalDate targetDate = request.containsKey("targetDate")
+                    ? LocalDate.parse(request.get("targetDate").toString())
+                    : null;
+
+            Goal updatedGoal = goalService.quickUpdateGoal(id, addAmount, targetAmount, targetDate,
+                    userPrincipal.getId());
+            return ResponseEntity.ok(updatedGoal);
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(error);
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteGoal(@PathVariable Long id, Authentication authentication) {
         try {
@@ -165,18 +194,18 @@ public class GoalController {
             return ResponseEntity.badRequest().body(error);
         }
     }
-    
+
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getGoalStats(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        
+
         Map<String, Object> stats = new HashMap<>();
         stats.put("totalGoals", goalService.getGoalCountByStatus(userPrincipal.getId(), null));
         stats.put("activeGoals", goalService.getGoalCountByStatus(userPrincipal.getId(), GoalStatus.ACTIVE));
         stats.put("completedGoals", goalService.getGoalCountByStatus(userPrincipal.getId(), GoalStatus.COMPLETED));
         stats.put("averageProgress", goalService.getAverageGoalProgress(userPrincipal.getId()));
         stats.put("overdueGoals", goalService.getOverdueGoals(userPrincipal.getId()).size());
-        
+
         return ResponseEntity.ok(stats);
     }
 }

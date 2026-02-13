@@ -23,9 +23,9 @@ public class BankAccountServiceImpl implements BankAccountService {
     private OtpTokenRepository otpTokenRepository;
 
     public BankAccountServiceImpl(BankAccountRepository bankAccountRepository,
-            UserRepository userRepository,
-            EncryptionUtil encryptionUtil,
-            OtpService otpService, OtpTokenRepository otpTokenRepository)
+                                  UserRepository userRepository,
+                                  EncryptionUtil encryptionUtil,
+                                  OtpService otpService,OtpTokenRepository otpTokenRepository)
 
     {
         System.out.println("BankAccountServiceImpl");
@@ -36,13 +36,14 @@ public class BankAccountServiceImpl implements BankAccountService {
         this.otpTokenRepository = otpTokenRepository;
     }
 
+
     @Override
     public BankAccount addBankAccount(Long userId,
-            String bankName,
-            String accountHolderName,
-            String accountNumber,
-            String ifscCode,
-            String accountType) {
+                                      String bankName,
+                                      String accountHolderName,
+                                      String accountNumber,
+                                      String ifscCode,
+                                      String accountType) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -72,6 +73,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         return savedAccount;
     }
 
+
     @Override
     public List<BankAccount> getUserBankAccounts(Long userId) {
 
@@ -80,6 +82,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
         return bankAccountRepository.findByUser(user);
     }
+
 
     @Override
     public boolean verifyBankAccount(Long userId, Long accountId, String otp) {
@@ -103,23 +106,23 @@ public class BankAccountServiceImpl implements BankAccountService {
 
         return true;
     }
-
     public void deleteBankAccount(Long userId, Long bankAccountId) {
         System.out.println("otpTokenRepository = " + otpTokenRepository);
 
         BankAccount account = bankAccountRepository
                 .findByIdAndUserId(bankAccountId, userId)
-                .orElseThrow(() -> new RuntimeException("Bank account not found"));
+                .orElseThrow(() ->
+                        new RuntimeException("Bank account not found"));
 
-        // Allow deletion of both verified and unverified accounts
+        // 🔐 Optional: block delete if not verified / active
+         if (!account.isVerified()) { throw new RuntimeException("Account not verified"); }
 
         // 🔥 delete related OTPs first
-        otpTokenRepository.deleteByBankAccount(account);
+   otpTokenRepository.deleteByBankAccount(account);
 
         // 🔥 delete bank account
         bankAccountRepository.delete(account);
     }
-
     public void requestDeleteOtp(Long userId, Long bankAccountId) {
 
         User user = userRepository.findById(userId)
@@ -129,17 +132,19 @@ public class BankAccountServiceImpl implements BankAccountService {
                 .findByIdAndUserId(bankAccountId, userId)
                 .orElseThrow(() -> new RuntimeException("Bank account not found"));
 
-        // Allow deletion of both verified and unverified accounts
-        // OTP is still required for security
+        // Optional: only verified accounts
+        if (!account.isVerified()) {
+            throw new RuntimeException("Bank account not verified");
+        }
 
         // 🔐 Generate & send OTP (reuse existing OTP system)
         otpService.generateAndSendOtp(user, account);
     }
-
     public void deleteBankAccountWithOtp(
             Long userId,
             Long bankAccountId,
-            String otp) {
+            String otp
+    ) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -163,3 +168,4 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
 }
+
