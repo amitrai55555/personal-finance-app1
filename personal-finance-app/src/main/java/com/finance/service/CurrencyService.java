@@ -1,5 +1,6 @@
 package com.finance.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -15,7 +16,11 @@ import java.util.Map;
 public class CurrencyService {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private static final String API_URL = "https://api.exchangerate-api.com/v4/latest/INR";
+    private final String apiUrl;
+
+    public CurrencyService(@Value("${currency.api.url:https://api.exchangerate-api.com/v4/latest/INR}") String apiUrl) {
+        this.apiUrl = apiUrl;
+    }
 
     // Store rates: Key = Currency Code (e.g., "USD"), Value = Rate in INR
     private Map<String, BigDecimal> currentRates = new HashMap<>();
@@ -25,10 +30,10 @@ public class CurrencyService {
     private static final List<String> CARD_CURRENCIES = List.of("USD", "EUR", "GBP", "CNY");
 
     // Fetch rates hourly - store ALL currencies from API for the converter
-    @Scheduled(fixedRate = 3600000) // 1 hour
+    @Scheduled(fixedRateString = "${currency.fetch-rate-ms:60000}") // default 1 minute
     public void fetchRates() {
         try {
-            Map<String, Object> response = restTemplate.getForObject(API_URL, Map.class);
+            Map<String, Object> response = restTemplate.getForObject(apiUrl, Map.class);
             if (response != null && response.containsKey("rates")) {
                 @SuppressWarnings("unchecked")
                 Map<String, Object> rates = (Map<String, Object>) response.get("rates");

@@ -9,6 +9,8 @@ C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\IncomeService.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\Mail\OtpService.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\AuthController.java
+C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\config\CloudinaryConfig.java
+C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\CurrencyController.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\IncomeRequest.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\Util\EncryptionUtil.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\DashboardService.java
@@ -19,6 +21,7 @@ C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\GoalRequest.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\IncomeController.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\Mail\WelcomeEmailService.java
+C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\SecuritiesService.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\auth\LoginRequest.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\GoalService.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\config\MailConfig.java
@@ -29,8 +32,11 @@ C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\BankAccountController.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\Mail\PasswordResetService.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\coach\FinancialProfileRequest.java
+C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\repository\EmailVerificationTokenRepository.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\repository\OtpTokenRepository.java
+C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\entity\EmailVerificationToken.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\Mail\OtpServiceImpl.java
+C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\Mail\EmailService.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\entity\Expense.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\coach\CoachAdviceResponse.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\auth\SignupRequest.java
@@ -57,7 +63,9 @@ C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\MarketQuote.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\entity\Goal.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\config\DataLoader.java
+C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\SecuritiesController.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\BankAccountService.java
+C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\UserProfileService.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\PublicController.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\InvestmentRecommendation.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\entity\BankTransaction.java
@@ -65,6 +73,7 @@ C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\repository\GoalRepository.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\FinancialCoachController.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\repository\UserRepository.java
+C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\CurrencyService.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\entity\PasswordResetToken.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\PersonalFinanceApplication.java
 C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\InvestmentController.java

@@ -76,6 +76,7 @@ public class SecurityConfig {
                         // 🌐 PUBLIC APIs
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/user/check-username").permitAll()
+                        .requestMatchers("/api/user/email/verify").permitAll()
                         .requestMatchers("/api/currency/**").permitAll() // Currency rates
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()

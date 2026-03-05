@@ -60,7 +60,7 @@ public class AdminController {
 
     @PostMapping("/users")
     public ResponseEntity<?> createUser(@RequestBody CreateUserRequest req) {
-        // Basic validation (keep it simple for now)
+
         if (req == null) {
             return ResponseEntity.badRequest().body(Map.of("error", "Request body is required"));
         }
@@ -108,7 +108,7 @@ public class AdminController {
             return ResponseEntity.badRequest().body(Map.of("error", "Request body is required"));
         }
 
-        // Prevent accidentally locking yourself out
+
         if (auth != null && auth.getName() != null && auth.getName().equalsIgnoreCase(user.getUsername())) {
             if (req.enabled != null && !req.enabled) {
                 return ResponseEntity.badRequest().body(Map.of("error", "You cannot disable your own account"));
@@ -131,7 +131,7 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "User not found"));
         }
 
-        // Prevent deleting yourself
+     
         if (auth != null && auth.getName() != null && auth.getName().equalsIgnoreCase(user.getUsername())) {
             return ResponseEntity.badRequest().body(Map.of("error", "You cannot delete your own account"));
         }

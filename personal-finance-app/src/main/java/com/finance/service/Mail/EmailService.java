@@ -15,19 +15,23 @@ public class EmailService {
     private final JavaMailSender mailSender;
     private final String frontendResetUrl;
     private final String testRecipient;
+    private final String frontendVerifyEmailUrl;
 
     public EmailService(
             JavaMailSender mailSender,
             @Value("${app.frontend.reset-password-url:http://localhost:3000/reset-password}") String frontendResetUrl,
-            @Value("${app.mail.test-recipient:}") String testRecipient
+            @Value("${app.mail.test-recipient:}") String testRecipient,
+            @Value("${app.frontend.verify-email-url:http://localhost:3000/verify-email}") String frontendVerifyEmailUrl
     ) {
         this.mailSender = mailSender;
         this.frontendResetUrl = frontendResetUrl;
         this.testRecipient = testRecipient != null ? testRecipient.trim() : "";
+        this.frontendVerifyEmailUrl = frontendVerifyEmailUrl;
 
         System.out.println(
                 "EmailService initialized | resetUrl=" + this.frontendResetUrl +
-                        " | testRecipient=" + this.testRecipient
+                        " | testRecipient=" + this.testRecipient +
+                        " | verifyEmailUrl=" + this.frontendVerifyEmailUrl
         );
     }
 
@@ -140,6 +144,39 @@ public class EmailService {
         System.out.println("OTP EMAIL SENT TO: " + recipient);
     }
 
+    public void sendEmailChangeVerification(User user, String newEmail, String otp) {
+        String recipient =
+                (testRecipient != null && !testRecipient.isEmpty())
+                        ? testRecipient
+                        : newEmail;
+
+        String subject = "Confirm your new email for FinTrackr";
+
+        String text = """
+                Hi %s,
+
+                You requested to change the email for your FinTrackr account.
+
+                Your verification code is:
+
+                %s
+
+                This code is valid for the next 10 minutes. Enter it in the app to confirm the change.
+
+                If you didn't request this, you can ignore this email.
+
+                Stay secure,
+                Team FinTrackr
+                """.formatted(user.getFirstName(), otp);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("FinTrackr <FinTrackrTech@gmail.com>");
+        message.setTo(recipient);
+        message.setSubject(subject);
+        message.setText(text);
+
+        mailSender.send(message);
+    }
 
 
 
