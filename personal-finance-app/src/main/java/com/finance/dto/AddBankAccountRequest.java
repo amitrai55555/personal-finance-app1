@@ -1,6 +1,7 @@
 package com.finance.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 public class AddBankAccountRequest {
 
@@ -14,6 +15,8 @@ public class AddBankAccountRequest {
     private String accountNumber;
 
     @NotBlank
+    @Pattern(regexp = "^[A-Za-z]{4}0[A-Za-z0-9]{6}$",
+            message = "IFSC must be 11 characters, e.g. SBIN0123456")
     private String ifscCode;
 
     private String accountType;

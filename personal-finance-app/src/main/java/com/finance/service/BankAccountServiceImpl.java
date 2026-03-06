@@ -6,6 +6,7 @@ import com.finance.repository.BankAccountRepository;
 import com.finance.repository.OtpTokenRepository;
 import com.finance.repository.UserRepository;
 import com.finance.Util.EncryptionUtil;
+import com.finance.Util.IfscUtil;
 import com.finance.service.Mail.OtpService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +49,9 @@ public class BankAccountServiceImpl implements BankAccountService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // Normalize IFSC prefix based on bank selection and validate
+        String normalizedIfsc = IfscUtil.normalize(bankName, ifscCode);
+
         // Encrypt account number
         String encryptedAccountNumber = encryptionUtil.encrypt(accountNumber);
 
@@ -61,7 +65,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         account.setBankName(bankName);
         account.setAccountHolderName(accountHolderName);
         account.setAccountNumberEncrypted(encryptedAccountNumber);
-        account.setIfscCode(ifscCode);
+        account.setIfscCode(normalizedIfsc);
         account.setAccountType(accountType);
         account.setVerified(false);
 

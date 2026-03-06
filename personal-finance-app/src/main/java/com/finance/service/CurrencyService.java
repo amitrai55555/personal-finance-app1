@@ -18,7 +18,7 @@ public class CurrencyService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final String apiUrl;
 
-    public CurrencyService(@Value("${currency.api.url:https://api.exchangerate-api.com/v4/latest/INR}") String apiUrl) {
+    public CurrencyService(@Value("${currency.api.url:https://open.er-api.com/v6/latest/INR}") String apiUrl) {
         this.apiUrl = apiUrl;
     }
 
@@ -34,7 +34,25 @@ public class CurrencyService {
     public void fetchRates() {
         try {
             Map<String, Object> response = restTemplate.getForObject(apiUrl, Map.class);
-            if (response != null && response.containsKey("rates")) {
+            if (response == null) {
+                System.err.println("Failed to fetch currency rates: empty response");
+                return;
+            }
+
+            // Some providers return a success flag or result field – bail out early on errors
+            Object successFlag = response.get("success");
+            if (successFlag instanceof Boolean && !(Boolean) successFlag) {
+                System.err.println("Currency API error: " + response.get("error"));
+                return;
+            }
+
+            Object resultFlag = response.get("result");
+            if (resultFlag instanceof String && !"success".equalsIgnoreCase((String) resultFlag)) {
+                System.err.println("Currency API result not successful: " + resultFlag + " error=" + response.get("error"));
+                return;
+            }
+
+            if (response.containsKey("rates")) {
                 @SuppressWarnings("unchecked")
                 Map<String, Object> rates = (Map<String, Object>) response.get("rates");
                 Map<String, BigDecimal> newRates = new HashMap<>();
