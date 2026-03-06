@@ -43,7 +43,7 @@ public class PasswordResetEmailService {
                 <p style="margin-top:16px;font-size:13px;color:#555;">
                 For your security, this link is valid for a limited time. If you did not request a reset, please ignore this email.</p>
                 <p>Stay secure,<br><b>Team FinTrackr</b></p>
-                """.formatted(user.getFirstName(), resetLink);
+                """.formatted(user.getUsername(), resetLink);
 
         try {
             MimeMessage message = mailSender.createMimeMessage();

@@ -40,7 +40,7 @@ public class WelcomeEmailService {
                 Welcome aboard,
 
                 Team FinTrackr
-                """.formatted(user.getFirstName());
+                """.formatted(user.getUsername());
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(fromAddress);

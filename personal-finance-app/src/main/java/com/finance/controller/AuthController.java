@@ -11,7 +11,6 @@ import com.finance.service.Mail.EmailService;
 import com.finance.service.Mail.EmailUpdateOtpService;
 import com.finance.service.Mail.PasswordResetService;
 import jakarta.validation.Valid;
-import org.aspectj.weaver.patterns.IToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +25,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.cloudinary.AccessControlRule.AccessType.token;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -76,8 +73,6 @@ class AuthControllerReset {
                     userDetails.getId(),
                     userDetails.getUsername(),
                     userDetails.getEmail(),
-                    getUserFirstName(userDetails.getId()),
-                    getUserLastName(userDetails.getId()),
                     userDetails.getAuthorities().iterator().next().getAuthority()));
         } catch (Exception e) {
             Map<String, String> error = new HashMap<>();
@@ -104,9 +99,7 @@ class AuthControllerReset {
         User user = new User(
                 signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()),
-                signUpRequest.getFirstName(),
-                signUpRequest.getLastName());
+                encoder.encode(signUpRequest.getPassword()));
 
         User savedUser = userRepository.save(user);
 
@@ -149,8 +142,6 @@ class AuthControllerReset {
         userInfo.put("id", user.getId());
         userInfo.put("username", user.getUsername());
         userInfo.put("email", user.getEmail());
-        userInfo.put("firstName", user.getFirstName());
-        userInfo.put("lastName", user.getLastName());
         userInfo.put("role", user.getRole());
         userInfo.put("createdAt", user.getCreatedAt());
         userInfo.put("profilePicture", user.getProfilePicture());
@@ -190,16 +181,6 @@ class AuthControllerReset {
         }
 
         // Other field updates
-        if (updates.containsKey("firstName")) {
-            String val = updates.get("firstName");
-            if (val != null && !val.trim().isEmpty())
-                user.setFirstName(val.trim());
-        }
-        if (updates.containsKey("lastName")) {
-            String val = updates.get("lastName");
-            if (val != null && !val.trim().isEmpty())
-                user.setLastName(val.trim());
-        }
         if (updates.containsKey("email")) {
             // Email updates require OTP verification — use /api/auth/email/request-otp
             return ResponseEntity.badRequest().body(Map.of("error",
@@ -215,8 +196,6 @@ class AuthControllerReset {
         userInfo.put("id", user.getId());
         userInfo.put("username", user.getUsername());
         userInfo.put("email", user.getEmail());
-        userInfo.put("firstName", user.getFirstName());
-        userInfo.put("lastName", user.getLastName());
         userInfo.put("role", user.getRole());
         userInfo.put("createdAt", user.getCreatedAt());
         userInfo.put("profilePicture", user.getProfilePicture());
@@ -228,14 +207,6 @@ class AuthControllerReset {
         }
 
         return ResponseEntity.ok(userInfo);
-    }
-
-    private String getUserFirstName(Long userId) {
-        return userRepository.findById(userId).map(User::getFirstName).orElse("");
-    }
-
-    private String getUserLastName(Long userId) {
-        return userRepository.findById(userId).map(User::getLastName).orElse("");
     }
 
     // ===== Email Update with OTP =====
@@ -307,8 +278,6 @@ class AuthControllerReset {
             userInfo.put("id", updatedUser.getId());
             userInfo.put("username", updatedUser.getUsername());
             userInfo.put("email", updatedUser.getEmail());
-            userInfo.put("firstName", updatedUser.getFirstName());
-            userInfo.put("lastName", updatedUser.getLastName());
             userInfo.put("role", updatedUser.getRole());
             userInfo.put("message", "Email updated successfully!");
 

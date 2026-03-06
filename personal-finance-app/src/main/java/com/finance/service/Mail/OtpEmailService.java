@@ -41,7 +41,7 @@ public class OtpEmailService {
 
                 Stay secure,
                 Team FinTrackr
-                """.formatted(user.getFirstName(), otp);
+                """.formatted(user.getUsername(), otp);
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(fromAddress);

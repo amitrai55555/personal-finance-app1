@@ -75,8 +75,6 @@ public class AdminController {
                 ? deriveUsername(req.email)
                 : req.username.trim();
 
-        NameParts nameParts = deriveName(req);
-
         if (userRepository.existsByUsername(username)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", "Username is already taken"));
         }
@@ -88,8 +86,6 @@ public class AdminController {
         user.setUsername(username);
         user.setEmail(req.email.trim());
         user.setPassword(passwordEncoder.encode(req.password));
-        user.setFirstName(nameParts.firstName);
-        user.setLastName(nameParts.lastName);
         user.setRole(parseRole(req.role));
         user.setEnabled(req.enabled == null ? Boolean.TRUE : req.enabled);
 
@@ -115,8 +111,6 @@ public class AdminController {
             }
         }
 
-        if (req.firstName != null) user.setFirstName(req.firstName.trim());
-        if (req.lastName != null) user.setLastName(req.lastName.trim());
         if (req.enabled != null) user.setEnabled(req.enabled);
         if (req.role != null && !req.role.isBlank()) user.setRole(parseRole(req.role));
 
@@ -148,29 +142,6 @@ public class AdminController {
         return base.isBlank() ? ("user" + System.currentTimeMillis()) : base;
     }
 
-    private static NameParts deriveName(CreateUserRequest req) {
-        String first = safe(req.firstName);
-        String last = safe(req.lastName);
-
-        if ((!first.isBlank() || !last.isBlank())) {
-            return new NameParts(first.isBlank() ? "User" : first, last.isBlank() ? "" : last);
-        }
-
-        String name = safe(req.name);
-        if (name.isBlank()) {
-            return new NameParts("User", "");
-        }
-
-        String[] parts = name.trim().split("\\s+", 2);
-        String f = parts[0];
-        String l = parts.length > 1 ? parts[1] : "";
-        return new NameParts(f, l);
-    }
-
-    private static String safe(String s) {
-        return s == null ? "" : s.trim();
-    }
-
     private static User.Role parseRole(String role) {
         if (role == null) return User.Role.USER;
         String r = role.trim().toUpperCase(Locale.ROOT);
@@ -178,19 +149,12 @@ public class AdminController {
         return "ADMIN".equals(r) ? User.Role.ADMIN : User.Role.USER;
     }
 
-    private record NameParts(String firstName, String lastName) {}
-
     public static class CreateUserRequest {
-        public String name;
-
         @NotBlank
         public String username;
 
         @Email
         public String email;
-
-        public String firstName;
-        public String lastName;
 
         @NotBlank
         public String password;
@@ -200,20 +164,16 @@ public class AdminController {
     }
 
     public static class UpdateUserRequest {
-        public String firstName;
-        public String lastName;
         public String role;
         public Boolean enabled;
     }
 
-    public record AdminUserDto(Long id, String username, String email, String firstName, String lastName, String role, Boolean enabled, Object createdAt) {
+    public record AdminUserDto(Long id, String username, String email, String role, Boolean enabled, Object createdAt) {
         public static AdminUserDto from(User u) {
             return new AdminUserDto(
                     u.getId(),
                     u.getUsername(),
                     u.getEmail(),
-                    u.getFirstName(),
-                    u.getLastName(),
                     u.getRole() == null ? null : u.getRole().name(),
                     u.getEnabled(),
                     u.getCreatedAt()

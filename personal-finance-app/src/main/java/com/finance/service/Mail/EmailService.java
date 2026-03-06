@@ -45,7 +45,7 @@ public class EmailService {
         String subject = "Password reset request";
 
         String html =
-                "<p>Hi " + user.getFirstName() + ",</p>" +
+                "<p>Hi " + user.getUsername() + ",</p>" +
                         "<p>Greetings from <b>FinTrackr</b>!</p>" +
                         "<p>We received a request to reset the password for your FinTrackr account.</p>" +
                         "<p>Click the button below to set a new password:</p>" +
@@ -95,7 +95,7 @@ public class EmailService {
         String subject = "Welcome to FinTrackr 🎉";
 
         String text =
-                "Hi " + user.getFirstName() + ",\n\n" +
+                "Hi " + user.getUsername() + ",\n\n" +
                         "Thank you for choosing FinTrackr. We’re excited to welcome you to our community.\n\n" +
                         "FinTrackr helps you track income, expenses, investments, and download detailed reports—" +
                         "all designed to give you clarity and control over your finances.\n\n" +
@@ -125,7 +125,7 @@ public class EmailService {
         String subject = "Bank Account Verification OTP";
 
         String text =
-                "Hi " + user.getFirstName() + ",\n\n" +
+                "Hi " + user.getUsername() + ",\n\n" +
                         "Your One-Time Password (OTP) for verifying your FinTrackr account is:\n\n" +
                         otp + "\n\n" +
                         "This OTP is valid for the next 10 minutes. Please do not share it with anyone for security reasons..\n\n" +
@@ -167,7 +167,7 @@ public class EmailService {
 
                 Stay secure,
                 Team FinTrackr
-                """.formatted(user.getFirstName(), otp);
+                """.formatted(user.getUsername(), otp);
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("FinTrackr <FinTrackrTech@gmail.com>");
