@@ -1,88 +1,98 @@
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\security\UserPrincipal.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\coach\GoalSummary.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\VerifyBankAccountRequest.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\entity\OtpToken.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\TransactionDTO.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\entity\Income.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\security\CustomUserDetailsService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\AccountAggregatorService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\IncomeService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\Mail\OtpService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\AuthController.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\config\CloudinaryConfig.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\CurrencyController.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\IncomeRequest.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\Util\EncryptionUtil.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\DashboardService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\GoalController.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\repository\ConsentRepository.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\ExpenseService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\exception\ResourceNotFoundException.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\GoalRequest.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\IncomeController.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\Mail\WelcomeEmailService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\SecuritiesService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\auth\LoginRequest.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\GoalService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\config\MailConfig.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\AdminController.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\ExpenseRequest.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\exception\DuplicateResourceException.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\config\SecurityConfig.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\BankAccountController.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\Mail\PasswordResetService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\coach\FinancialProfileRequest.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\repository\EmailVerificationTokenRepository.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\repository\OtpTokenRepository.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\entity\EmailVerificationToken.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\Mail\OtpServiceImpl.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\Mail\EmailService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\entity\Expense.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\coach\CoachAdviceResponse.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\auth\SignupRequest.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\repository\ExpenseRepository.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\BankAccountServiceImpl.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\MarketDataClient.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\security\JwtUtils.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\exception\GlobalExceptionHandler.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\repository\IncomeRepository.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\DashboardController.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\FinancialCoachService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\ExpenseResponse.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\entity\Consent.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\repository\PasswordResetTokenRepository.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\UserRegisterService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\PortfolioAllocation.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\repository\BankTransactionRepository.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\AddBankAccountRequest.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\auth\JwtResponse.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\coach\AdviceItem.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\RecommendationServiceClient.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\entity\BankAccount.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\Mail\PasswordResetEmailService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\MarketQuote.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\entity\Goal.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\config\DataLoader.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\SecuritiesController.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\BankAccountService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\UserProfileService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\PublicController.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\InvestmentRecommendation.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\entity\BankTransaction.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\UserController.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\repository\GoalRepository.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\FinancialCoachController.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\repository\UserRepository.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\CurrencyService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\entity\PasswordResetToken.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\PersonalFinanceApplication.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\InvestmentController.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\MarketDataStreamController.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\dto\IncomeResponse.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\security\JwtAuthenticationFilter.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\MarketDataStreamService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\entity\User.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\InvestmentService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\controller\ExpenseController.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\service\Mail\OtpEmailService.java
-C:\Users\iasam\OneDrive\Documents\GitHub\personal-finance-app1\personal-finance-app\src\main\java\com\finance\repository\BankAccountRepository.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\controller\GoalController.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\controller\SecuritiesController.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\exception\ResourceNotFoundException.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\controller\IncomeController.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\ExpenseResponse.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\Mail\WelcomeEmailService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\controller\AuthController.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\controller\DashboardController.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\repository\GoalRepository.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\coach\FinbotAdvice.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\MarketDataStreamService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\chat\ChatMessageRequest.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\repository\ExpenseRepository.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\entity\EmailVerificationToken.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\chat\ChatRequestPayload.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\security\UserPrincipal.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\FinancialCoachService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\coach\CoachAdviceResponse.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\Util\IfscUtil.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\SecuritiesService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\controller\AdminController.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\entity\Goal.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\controller\ExpenseController.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\coach\AdviceItem.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\entity\Income.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\Mail\EmailService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\config\SecurityConfig.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\config\DataLoader.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\entity\User.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\repository\ConsentRepository.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\Mail\PasswordResetService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\Util\EncryptionUtil.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\controller\PublicController.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\controller\InvestmentController.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\controller\MarketDataStreamController.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\auth\JwtResponse.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\repository\EmailUpdateOtpTokenRepository.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\PortfolioAllocation.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\UserProfileService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\controller\UserController.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\entity\EmailUpdateOtpToken.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\repository\OtpTokenRepository.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\coach\GoalSummary.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\chat\ChatResponse.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\Mail\PasswordResetEmailService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\BankAccountServiceImpl.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\PersonalFinanceApplication.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\coach\FinancialProfileRequest.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\VerifyBankAccountRequest.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\ExpenseRequest.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\InvestmentService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\entity\PasswordResetToken.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\ExpenseService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\repository\PasswordResetTokenRepository.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\config\MailConfig.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\DashboardService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\entity\BankTransaction.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\Mail\OtpEmailService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\security\JwtUtils.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\MarketQuote.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\repository\BankAccountRepository.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\entity\Expense.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\TransactionDTO.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\AccountAggregatorService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\repository\EmailVerificationTokenRepository.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\CurrencyService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\AiChatService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\entity\BankAccount.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\IncomeResponse.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\Mail\OtpServiceImpl.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\controller\FinancialCoachController.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\controller\BankAccountController.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\RecommendationServiceClient.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\InvestmentRecommendation.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\repository\IncomeRepository.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\repository\BankTransactionRepository.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\exception\DuplicateResourceException.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\auth\LoginRequest.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\entity\OtpToken.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\MarketDataClient.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\AddBankAccountRequest.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\exception\GlobalExceptionHandler.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\security\CustomUserDetailsService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\Mail\OtpService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\controller\AiChatController.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\BankAccountService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\UserRegisterService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\security\JwtAuthenticationFilter.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\GoalRequest.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\auth\SignupRequest.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\IncomeService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\config\CloudinaryConfig.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\Mail\EmailUpdateOtpService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\controller\CurrencyController.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\repository\UserRepository.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\entity\Consent.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\service\GoalService.java
+D:\Fintrackr Microservice\personal-finance-app\src\main\java\com\finance\dto\IncomeRequest.java

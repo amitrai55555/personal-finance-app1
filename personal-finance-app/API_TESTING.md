@@ -1,12 +1,12 @@
 # API Testing Guide
 
-This guide provides sample requests for testing all the API endpoints of the Personal Finance Application.
+This guide provides sample requests for testing all the API endpoints of the **Personal Finance Application** (port 8080) and the **Recommendation Service** (port 8081).
 
 ## Quick Start
 
-1. Start the application: `mvn spring-boot:run`
-2. The API will be available at: `http://localhost:8080`
-3. Use the demo credentials to test: username `demo`, password `password123`
+1. Start **Recommendation Service**: `cd recommendation-service && mvn spring-boot:run` (port 8081)
+2. Start **Personal Finance App**: `cd personal-finance-app && mvn spring-boot:run` (port 8080)
+3. Both require: MySQL on `localhost:3306`, database `personal_finance`, Java 21
 
 ## Authentication Flow
 
@@ -27,10 +27,8 @@ curl -X POST http://localhost:8080/api/auth/register \
 ```bash
 curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
-  
-  
   -d '{
-    "usernameOrEmail": "amit230604@gmail.com",
+    "usernameOrEmail": "testuser",
     "password": "password123"
   }'
 ```
@@ -39,7 +37,7 @@ curl -X POST http://localhost:8080/api/auth/login \
 
 ### 3. Get Current User Info
 ```bash
-curl -X GET http://localhost:8080/api/auth/me \
+    curl -X GET http://localhost:8080/api/auth/me \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
@@ -203,53 +201,235 @@ curl -X GET http://localhost:8080/api/investments/risk-profiles \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
+---
+
+## Financial Coach (via Recommendation Service)
+
+The coach endpoint reads your **real financial data** (income, expenses, goals) from the database and sends it to the Recommendation Service for personalized advice.
+
+### Get Coach Advice (auto-detect risk profile)
+```bash
+curl -X GET http://localhost:8080/api/coach/advice \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### Get Coach Advice (explicit risk profile)
+```bash
+curl -X GET "http://localhost:8080/api/coach/advice?riskProfile=AGGRESSIVE" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+**Response includes:**
+- `portfolio` — investment allocation with stock/bond/REIT/alternative recommendations
+- `savingsAdvice` — personalized savings tips based on your savings rate
+- `expenseAdvice` — top spend categories with actionable steps to cut
+- `goalAdvice` — monthly contribution plan for each active goal
+- `finbot` — AI-generated greeting, summary, actions & risks (when AI is enabled)
+
+---
+
+## AI Chat (Finbot)
+
+Chat with the AI financial coach. Your real financial profile is automatically attached to provide context-aware answers.
+
+### Chat about Savings
+```bash
+curl -X POST http://localhost:8080/api/chat \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "How can I improve my savings this month?",
+    "topic": "savings"
+  }'
+```
+
+### Chat about Investing
+```bash
+curl -X POST http://localhost:8080/api/chat \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "What investments should I consider given my financial situation?",
+    "topic": "investing"
+  }'
+```
+
+### Chat about Debt
+```bash
+curl -X POST http://localhost:8080/api/chat \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "How should I manage my debt payments?",
+    "topic": "debt"
+  }'
+```
+
+### General Financial Chat
+```bash
+curl -X POST http://localhost:8080/api/chat \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "Give me a quick overview of my financial health"
+  }'
+```
+
+### Continue a Conversation
+```bash
+curl -X POST http://localhost:8080/api/chat \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "Tell me more about that last point",
+    "conversationId": "my-conversation-1"
+  }'
+```
+
+---
+
+## Recommendation Service — Direct API (port 8081)
+
+These endpoints can be called directly against the Recommendation Service without JWT authentication.
+
+### Health Check
+```bash
+curl http://localhost:8081/actuator/health
+```
+
+### Generate Investment Portfolio
+```bash
+curl -X POST http://localhost:8081/api/recommendations/investments \
+  -H "Content-Type: application/json" \
+  -d '{
+    "riskProfile": "MODERATE",
+    "monthlyIncome": 50000,
+    "monthlyExpenses": 30000,
+    "monthlySavings": 20000,
+    "savingsRate": 40.0,
+    "investmentCapacity": 4000,
+    "expensesByCategory": {
+      "FOOD": 8000,
+      "HOUSING": 12000,
+      "TRANSPORTATION": 5000,
+      "ENTERTAINMENT": 3000,
+      "UTILITIES": 2000
+    },
+    "goals": [{
+      "title": "Emergency Fund",
+      "targetAmount": 100000,
+      "currentAmount": 25000,
+      "targetDate": "2026-12-01",
+      "priority": "HIGH"
+    }]
+  }'
+```
+
+### Get Coach Advice (with profile data)
+```bash
+curl -X POST http://localhost:8081/api/recommendations/coach \
+  -H "Content-Type: application/json" \
+  -d '{
+    "riskProfile": "MODERATE",
+    "monthlyIncome": 50000,
+    "monthlyExpenses": 30000,
+    "monthlySavings": 20000,
+    "savingsRate": 40.0,
+    "investmentCapacity": 4000,
+    "expensesByCategory": {
+      "FOOD": 8000,
+      "HOUSING": 12000,
+      "TRANSPORTATION": 5000
+    },
+    "goals": [{
+      "title": "Emergency Fund",
+      "targetAmount": 100000,
+      "currentAmount": 25000,
+      "targetDate": "2026-12-01",
+      "priority": "HIGH"
+    }]
+  }'
+```
+
+### Get Coach Advice with AI Enrichment
+```bash
+curl -X POST "http://localhost:8081/api/recommendations/coach?useAI=true" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "riskProfile": "AGGRESSIVE",
+    "userName": "Amit",
+    "monthlyIncome": 80000,
+    "monthlyExpenses": 40000,
+    "monthlySavings": 40000,
+    "savingsRate": 50.0,
+    "investmentCapacity": 8000,
+    "expensesByCategory": {
+      "FOOD": 10000,
+      "HOUSING": 15000,
+      "SHOPPING": 8000
+    },
+    "goals": [{
+      "title": "Buy a House",
+      "targetAmount": 2000000,
+      "currentAmount": 200000,
+      "targetDate": "2028-01-01",
+      "priority": "HIGH"
+    }]
+  }'
+```
+
+### AI Chat (Bridge Endpoint)
+```bash
+curl -X POST http://localhost:8081/api/recommendations/chat \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "How should I allocate my investments?",
+    "topic": "investing",
+    "riskProfile": "MODERATE",
+    "conversationId": "test-conv-1",
+    "profile": {
+      "monthlyIncome": 50000,
+      "monthlyExpenses": 30000,
+      "monthlySavings": 20000,
+      "savingsRate": 40.0,
+      "investmentCapacity": 4000,
+      "riskProfile": "MODERATE"
+    }
+  }'
+```
+
+### Finbot Direct Chat
+```bash
+curl -X POST http://localhost:8081/api/finbot/chat \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages": [{
+      "role": "user",
+      "content": "I earn 50,000/month and save 40%. What should I invest in?"
+    }]
+  }'
+```
+
+---
+
 ## Testing with Postman
 
 ### Environment Variables
 Create a Postman environment with:
 - `baseUrl`: `http://localhost:8080`
+- `recUrl`: `http://localhost:8081`
 - `jwtToken`: (set after login)
 
 ### Collection Structure
-1. **Authentication**
-   - Register User
-   - Login
-   - Get Current User
-
-2. **Income Management**
-   - Add Income
-   - Get Incomes
-   - Update Income
-   - Delete Income
-
-3. **Expense Management**
-   - Add Expense
-   - Get Expenses
-   - Update Expense
-   - Delete Expense
-
-4. **Goal Management**
-   - Create Goal
-   - Get Goals
-   - Update Goal
-   - Update Progress
-
-5. **Dashboard**
-   - Overview
-   - Analytics
-   - Insights
-
-6. **Investments**
-   - Get Recommendations
-   - Risk Analysis
-
-## Sample Data
-
-The application loads sample data on startup with:
-- Demo user (username: `demo`, password: `password123`)
-- Sample income entries (salary, freelance)
-- Sample expenses (rent, groceries, transportation)
-- Sample goals (emergency fund, vacation, new car)
+1. **Authentication** — Register, Login, Get User
+2. **Income Management** — Add, Get, Update, Delete
+3. **Expense Management** — Add, Get, Update, Delete
+4. **Goal Management** — Create, Get, Update Progress
+5. **Dashboard** — Overview, Trends, Insights, Spending Analysis
+6. **Investments** — Capacity, Recommendations, Risk Profiles
+7. **Financial Coach** — Get Advice (auto/explicit risk profile)
+8. **AI Chat** — Savings, Investing, Debt, General
+9. **Recommendation Service Direct** — Portfolio, Coach, AI Chat, Finbot
 
 ## Error Handling
 

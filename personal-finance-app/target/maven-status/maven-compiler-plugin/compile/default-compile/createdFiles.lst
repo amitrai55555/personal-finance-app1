@@ -7,9 +7,11 @@ com\finance\controller\CurrencyController.class
 com\finance\entity\BankTransaction$TxnType.class
 com\finance\service\Mail\EmailService.class
 com\finance\exception\DuplicateResourceException.class
+com\finance\Util\IfscUtil.class
 com\finance\dto\IncomeRequest.class
 com\finance\service\UserRegisterService.class
 com\finance\controller\BankAccountController.class
+com\finance\service\Mail\EmailUpdateOtpService.class
 com\finance\controller\DashboardController.class
 com\finance\repository\PasswordResetTokenRepository.class
 com\finance\exception\GlobalExceptionHandler.class
@@ -18,6 +20,7 @@ com\finance\config\SecurityConfig.class
 com\finance\entity\Income$IncomeCategory.class
 com\finance\service\MarketDataClient$CachedQuote.class
 com\finance\controller\InvestmentController.class
+com\finance\controller\AiChatController.class
 com\finance\service\BankAccountServiceImpl.class
 com\finance\controller\AdminController$CreateUserRequest.class
 com\finance\entity\BankAccount.class
@@ -38,6 +41,7 @@ com\finance\dto\coach\CoachAdviceResponse.class
 com\finance\entity\Expense.class
 com\finance\service\Mail\WelcomeEmailService.class
 com\finance\service\AccountAggregatorService.class
+com\finance\dto\chat\ChatRequestPayload.class
 com\finance\exception\ResourceNotFoundException.class
 com\finance\dto\ExpenseResponse.class
 com\finance\service\SecuritiesService$SecurityItem.class
@@ -50,21 +54,23 @@ com\finance\controller\AdminController$AdminUserDto.class
 com\finance\security\CustomUserDetailsService.class
 com\finance\entity\OtpToken.class
 com\finance\controller\AdminController$UpdateUserRequest.class
+com\finance\service\AiChatService.class
 com\finance\dto\GoalRequest.class
 com\finance\service\Mail\PasswordResetEmailService.class
 com\finance\PersonalFinanceApplication.class
-com\finance\controller\AdminController$NameParts.class
 com\finance\config\MailConfig.class
 com\finance\controller\AuthControllerReset$ForgotPasswordRequest.class
 com\finance\entity\Expense$ExpenseCategory.class
 com\finance\controller\AuthControllerReset$ResetPasswordRequest.class
 com\finance\dto\coach\AdviceItem.class
 com\finance\controller\AdminController.class
+com\finance\repository\EmailUpdateOtpTokenRepository.class
 com\finance\service\IncomeService.class
 com\finance\dto\auth\JwtResponse.class
 com\finance\config\CloudinaryConfig.class
 com\finance\dto\coach\GoalSummary.class
 com\finance\service\BankAccountService.class
+com\finance\dto\coach\FinbotAdvice.class
 com\finance\service\MarketDataClient$QuoteResponse.class
 com\finance\entity\Consent$ConsentStatus.class
 com\finance\repository\GoalRepository.class
@@ -90,6 +96,7 @@ com\finance\controller\AuthControllerReset.class
 com\finance\entity\Income$RecurrenceType.class
 com\finance\service\UserProfileService.class
 com\finance\service\InvestmentService.class
+com\finance\entity\EmailUpdateOtpToken.class
 com\finance\controller\GoalController.class
 com\finance\repository\ExpenseRepository.class
 com\finance\security\UserPrincipal.class
@@ -97,6 +104,7 @@ com\finance\service\ExpenseService.class
 com\finance\repository\OtpTokenRepository.class
 com\finance\dto\InvestmentRecommendation.class
 com\finance\controller\FinancialCoachController.class
+com\finance\dto\chat\ChatMessageRequest.class
 com\finance\service\GoalService.class
 com\finance\security\JwtAuthenticationFilter.class
 com\finance\service\FinancialCoachService.class
@@ -107,4 +115,5 @@ com\finance\security\JwtUtils.class
 com\finance\service\SecuritiesService.class
 com\finance\service\IncomeService$1.class
 com\finance\entity\Goal$Priority.class
+com\finance\dto\chat\ChatResponse.class
 com\finance\service\RecommendationServiceClient.class

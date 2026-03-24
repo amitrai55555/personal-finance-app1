@@ -6,6 +6,7 @@ import com.finance.dto.coach.CoachAdviceResponse;
 import com.finance.dto.coach.FinancialProfileRequest;
 import com.finance.dto.coach.GoalSummary;
 import com.finance.entity.Goal;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 
@@ -28,7 +29,7 @@ public class FinancialCoachService {
             DashboardService dashboardService,
             ExpenseService expenseService,
             GoalService goalService,
-            InvestmentService investmentService,
+            @Lazy InvestmentService investmentService,
             RecommendationServiceClient recommendationClient
     ) {
         this.dashboardService = dashboardService;
@@ -69,7 +70,7 @@ public class FinancialCoachService {
         return fallback;
     }
 
-    private FinancialProfileRequest buildProfile(Long userId, String riskProfile) {
+    public FinancialProfileRequest buildProfile(Long userId, String riskProfile) {
         Map<String, Object> insights = dashboardService.getFinancialInsights(userId);
         BigDecimal monthlyIncome = (BigDecimal) insights.getOrDefault("monthlyIncome", BigDecimal.ZERO);
         BigDecimal monthlyExpenses = (BigDecimal) insights.getOrDefault("monthlyExpenses", BigDecimal.ZERO);

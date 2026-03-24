@@ -297,6 +297,24 @@ GET /api/investments/risk-profiles
 Authorization: Bearer <jwt-token>
 ```
 
+### AI Chat Endpoint
+
+#### Chat With Financial Coach
+```http
+POST /api/chat
+Authorization: Bearer <jwt-token>
+Content-Type: application/json
+
+{
+  "message": "How should I allocate my bonus?",
+  "topic": "investing",
+  "riskProfile": "MODERATE",
+  "conversationId": "optional-id"
+}
+```
+
+Returns the AI reply plus optional actionable suggestions. Falls back to built-in guidance if the AI microservice is unreachable.
+
 ## 🔒 Security Features
 
 - **JWT Authentication**: Secure token-based authentication
@@ -334,6 +352,10 @@ Authorization: Bearer <jwt-token>
 - **Confidence Scoring**: AI confidence ratings for each recommendation
 - **Detailed Analysis**: Pros, cons, and reasoning for each suggestion
 
+### AI Chat Coach
+- **Context-aware chat** that uses your financial profile and risk settings
+- **Microservice-backed** with graceful fallbacks when the AI service is unavailable
+- **Actionable suggestions** returned alongside the AI reply
 ### Risk Profiles
 - **Conservative**: 40% stocks, 40% bonds, 15% real estate, 5% alternatives
 - **Moderate**: 60% stocks, 20% bonds, 15% real estate, 5% alternatives
@@ -436,5 +458,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 For support and questions, please open an issue in the repository or contact the development team.
 
 ---
-
+ollama api key :844807b580ab4f62ab99b9b34a9bae48.Wc7gVfIOh9MrcIkSqSyuqni1
 **Built with ❤️ using Spring Boot and modern Java development practices**

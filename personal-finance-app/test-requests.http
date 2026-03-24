@@ -1,4 +1,9 @@
 ### Personal Finance Application - API Testing
+### Includes both Personal Finance App (port 8080) and Recommendation Service (port 8081)
+
+##########################################################################
+# ==================== PERSONAL FINANCE APP (8080) ===================== #
+##########################################################################
 
 ### 1. User Registration
 POST http://localhost:8080/api/auth/register
@@ -12,7 +17,7 @@ Content-Type: application/json
   "lastName": "User"
 }
 
-### 2. User Login (Demo User)
+### 2. User Login
 POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
@@ -150,5 +155,251 @@ Authorization: Bearer {{jwt_token}}
 ### 25. Get Spending Analysis
 GET http://localhost:8080/api/dashboard/spending-analysis?startDate=2024-01-01&endDate=2024-01-31
 Authorization: Bearer {{jwt_token}}
+
+##########################################################################
+# ==================== FINANCIAL COACH (8080) ========================== #
+# Uses user's real DB data → calls Recommendation Service for AI advice  #
+##########################################################################
+
+### 26. Get Financial Coach Advice (auto-detect risk profile from user data)
+GET http://localhost:8080/api/coach/advice
+Authorization: Bearer {{jwt_token}}
+
+### 27. Get Financial Coach Advice (explicit risk profile)
+GET http://localhost:8080/api/coach/advice?riskProfile=MODERATE
+Authorization: Bearer {{jwt_token}}
+
+### 28. Get Financial Coach Advice (aggressive profile)
+GET http://localhost:8080/api/coach/advice?riskProfile=AGGRESSIVE
+Authorization: Bearer {{jwt_token}}
+
+##########################################################################
+# ==================== AI CHAT (8080) ================================== #
+# Sends user data + message to Recommendation Service Finbot AI          #
+##########################################################################
+
+### 29. AI Chat - General financial question
+POST http://localhost:8080/api/chat
+Authorization: Bearer {{jwt_token}}
+Content-Type: application/json
+
+{
+  "message": "How can I improve my savings this month?",
+  "topic": "savings"
+}
+
+### 30. AI Chat - Investing question
+POST http://localhost:8080/api/chat
+Authorization: Bearer {{jwt_token}}
+Content-Type: application/json
+
+{
+  "message": "What investments should I consider given my financial situation?",
+  "topic": "investing"
+}
+
+### 31. AI Chat - Debt question
+POST http://localhost:8080/api/chat
+Authorization: Bearer {{jwt_token}}
+Content-Type: application/json
+
+{
+  "message": "How should I manage my debt payments?",
+  "topic": "debt"
+}
+
+### 32. AI Chat - General question (no topic)
+POST http://localhost:8080/api/chat
+Authorization: Bearer {{jwt_token}}
+Content-Type: application/json
+
+{
+  "message": "Give me a quick overview of my financial health"
+}
+
+### 33. AI Chat - With conversation ID (for follow-ups)
+POST http://localhost:8080/api/chat
+Authorization: Bearer {{jwt_token}}
+Content-Type: application/json
+
+{
+  "message": "Tell me more about that last point",
+  "conversationId": "my-conversation-1"
+}
+
+##########################################################################
+# =============== RECOMMENDATION SERVICE DIRECT (8081) ================= #
+# Direct calls to the recommendation microservice (no JWT needed)        #
+##########################################################################
+
+### 34. Recommendation Service - Health Check
+GET http://localhost:8081/actuator/health
+
+### 35. Recommendation Service - Generate Investment Portfolio
+POST http://localhost:8081/api/recommendations/investments
+Content-Type: application/json
+
+{
+  "riskProfile": "MODERATE",
+  "monthlyIncome": 50000,
+  "monthlyExpenses": 30000,
+  "monthlySavings": 20000,
+  "savingsRate": 40.0,
+  "investmentCapacity": 4000,
+  "expensesByCategory": {
+    "FOOD": 8000,
+    "HOUSING": 12000,
+    "TRANSPORTATION": 5000,
+    "ENTERTAINMENT": 3000,
+    "UTILITIES": 2000
+  },
+  "goals": [
+    {
+      "title": "Emergency Fund",
+      "targetAmount": 100000,
+      "currentAmount": 25000,
+      "targetDate": "2026-12-01",
+      "priority": "HIGH"
+    }
+  ]
+}
+
+### 36. Recommendation Service - Get Coach Advice (with profile data)
+POST http://localhost:8081/api/recommendations/coach
+Content-Type: application/json
+
+{
+  "riskProfile": "MODERATE",
+  "monthlyIncome": 50000,
+  "monthlyExpenses": 30000,
+  "monthlySavings": 20000,
+  "savingsRate": 40.0,
+  "investmentCapacity": 4000,
+  "expensesByCategory": {
+    "FOOD": 8000,
+    "HOUSING": 12000,
+    "TRANSPORTATION": 5000,
+    "ENTERTAINMENT": 3000,
+    "UTILITIES": 2000
+  },
+  "goals": [
+    {
+      "title": "Emergency Fund",
+      "targetAmount": 100000,
+      "currentAmount": 25000,
+      "targetDate": "2026-12-01",
+      "priority": "HIGH"
+    },
+    {
+      "title": "Vacation",
+      "targetAmount": 50000,
+      "currentAmount": 10000,
+      "targetDate": "2026-06-01",
+      "priority": "MEDIUM"
+    }
+  ]
+}
+
+### 37. Recommendation Service - Get Coach Advice with AI enrichment
+POST http://localhost:8081/api/recommendations/coach?useAI=true
+Content-Type: application/json
+
+{
+  "riskProfile": "AGGRESSIVE",
+  "userName": "Amit",
+  "monthlyIncome": 80000,
+  "monthlyExpenses": 40000,
+  "monthlySavings": 40000,
+  "savingsRate": 50.0,
+  "investmentCapacity": 8000,
+  "expensesByCategory": {
+    "FOOD": 10000,
+    "HOUSING": 15000,
+    "SHOPPING": 8000,
+    "ENTERTAINMENT": 4000,
+    "TRANSPORTATION": 3000
+  },
+  "goals": [
+    {
+      "title": "Buy a House",
+      "targetAmount": 2000000,
+      "currentAmount": 200000,
+      "targetDate": "2028-01-01",
+      "priority": "HIGH"
+    }
+  ]
+}
+
+### 38. Recommendation Service - AI Chat (bridge endpoint)
+POST http://localhost:8081/api/recommendations/chat
+Content-Type: application/json
+
+{
+  "message": "How should I allocate my investments given my savings rate?",
+  "topic": "investing",
+  "riskProfile": "MODERATE",
+  "conversationId": "test-conv-1",
+  "profile": {
+    "monthlyIncome": 50000,
+    "monthlyExpenses": 30000,
+    "monthlySavings": 20000,
+    "savingsRate": 40.0,
+    "investmentCapacity": 4000,
+    "riskProfile": "MODERATE",
+    "expensesByCategory": {
+      "FOOD": 8000,
+      "HOUSING": 12000,
+      "TRANSPORTATION": 5000
+    },
+    "goals": [
+      {
+        "title": "Emergency Fund",
+        "targetAmount": 100000,
+        "currentAmount": 25000,
+        "targetDate": "2026-12-01"
+      }
+    ]
+  }
+}
+
+### 39. Recommendation Service - Finbot Direct Chat
+POST http://localhost:8081/api/finbot/chat
+Content-Type: application/json
+
+{
+  "systemInstruction": "You are Finbot, a concise personal finance coach. Keep responses short.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "I have a savings rate of 40% and earn 50,000/month. What should I invest in?"
+    }
+  ]
+}
+
+### 40. Recommendation Service - Conservative Portfolio
+POST http://localhost:8081/api/recommendations/investments
+Content-Type: application/json
+
+{
+  "riskProfile": "CONSERVATIVE",
+  "monthlyIncome": 30000,
+  "monthlyExpenses": 25000,
+  "monthlySavings": 5000,
+  "savingsRate": 16.7,
+  "investmentCapacity": 1000
+}
+
+### 41. Recommendation Service - Aggressive Portfolio
+POST http://localhost:8081/api/recommendations/investments
+Content-Type: application/json
+
+{
+  "riskProfile": "AGGRESSIVE",
+  "monthlyIncome": 100000,
+  "monthlyExpenses": 40000,
+  "monthlySavings": 60000,
+  "savingsRate": 60.0,
+  "investmentCapacity": 12000
+}
 
 ###

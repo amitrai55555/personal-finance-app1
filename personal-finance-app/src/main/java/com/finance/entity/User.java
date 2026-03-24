@@ -90,6 +90,10 @@ public class User {
     @JsonIgnore
     private List<EmailVerificationToken> emailVerificationTokens = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Investment> investments = new ArrayList<>();
+
     // Constructors
     public User() {}
     
@@ -199,6 +203,14 @@ public class User {
     
     public void setGoals(List<Goal> goals) {
         this.goals = goals;
+    }
+
+    public List<Investment> getInvestments() {
+        return investments;
+    }
+
+    public void setInvestments(List<Investment> investments) {
+        this.investments = investments;
     }
     
     public enum Role {

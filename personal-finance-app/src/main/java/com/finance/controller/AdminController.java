@@ -159,7 +159,7 @@ public class AdminController {
         @NotBlank
         public String password;
 
-        public String role; // ADMIN | USER (also supports ROLE_ADMIN)
+        public String role;
         public Boolean enabled;
     }
 
